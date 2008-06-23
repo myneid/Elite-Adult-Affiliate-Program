@@ -1,0 +1,8 @@
+AuthUserFile /web/xx.com/admin/.htpasswd
+AuthGroupFile /dev/null
+AuthName "xx.com"
+AuthType Basic
+
+<Limit GET POST>
+require valid-user
+</Limit>

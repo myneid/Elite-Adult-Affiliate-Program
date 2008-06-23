@@ -1,0 +1,104 @@
+
+<link href="../affiliates.css" rel="stylesheet" type="text/css">
+<div align="center">
+<div align="center"><img src="../images/headertemplate.gif" width="463" height="74"><br>
+                  <br>
+    <img src="../images/longhorizline.gif" width="637" height="1"><br>
+</div>
+
+<h3 align="center">List Scales</h3>
+<form method=post>
+  <div align="center">Program
+    <input type=hidden name=action value='list_scales'>
+    <input type=hidden name=affiliate_id value='{$affiliate_id}'>
+    <select name='program_id'>
+      
+
+{html_options values=$program_ids selected=$program_id output=$program_names}
+
+    </select>
+    <input type=submit value='Change Scale'>
+  </div>
+</form>
+<div align="center"><br>
+</div>
+<form method=post>
+  <div align="center">
+    <input type=hidden name=action value='add_scale'>
+    <input type=hidden name=affiliate_id value='{$affiliate_id}'>
+    <input type=hidden name=program_id value='{$program_id}'>
+	  <font color="#FFFFCC">Add Scale</font><br>
+	  <br>
+	  <table border=1 cellpadding="0" cellspacing="0" bordercolor="#000000"  bgcolor=#666666>
+	  <tr><th bgcolor="#333333"><font color="#FFFFCC">Percentage</font></th>
+	  <th bgcolor="#333333"><font color="#FFFFCC">Signups</font></th>
+	  <th bgcolor="#333333"><font color="#FFFFCC">Price Per Hit</font></th>
+	  <th bgcolor="#333333"><font color="#FFFFCC">Price Per Signup</font></th>
+	  <th bgcolor="#333333"><font color="#FFFFCC">Price Reduced Per Cancel</font></th>
+	  <th bgcolor="#333333"><font color="#FFFFCC">Price Reduced Per Chargeback</font></th>
+	  </tr>
+	  <tr><td bgcolor=#999999><input type=text name=percentage></td><td bgcolor=#999999><input type=text name=signups></td><td bgcolor=#999999><input type=text name=priceperhit></td><td bgcolor=#999999><input type=text name=pricepersignup></td><td bgcolor=#999999><input type=text name=pricereducedpercancel></td><td bgcolor=#999999><input type=text name=pricereducedperchargeback></td></tr>
+      </table>
+      <br>
+    <input type=submit>
+  </div>
+</form>
+	<div align="center">
+	  <form method=post>
+	  <input type=hidden name=action value='save_all'>
+	  <input type=hidden name=affiliate_id value='{$affiliate_id}'>
+	  <input type=hidden name=program_id value='{$program_id}'>
+	Scale for <font color="#FFCC00">{$affiliate_id}</font>
+	<table border=1 cellpadding="0" cellspacing="0" bordercolor="#000000"  bgcolor=#666666>
+	<tr bgcolor="#333333"><th><font color="#FFFFCC">Percentage</font></th>
+	<th><font color="#FFFFCC">Signups</font></th>
+	<th><font color="#FFFFCC">Price Per Hit</font></th>
+	<th><font color="#FFFFCC">Price Per Signup</font></th>
+	<th><font color="#FFFFCC">Price Reduced Per Cancel</font></th>
+	<th><font color="#FFFFCC">Price Reduced Per Chargeback</font></th>
+	</tr>
+	
+	{foreach item=s from=$scales}
+		<input type=hidden name=id_{$s->id} value={$s->id}>
+		<tr>
+		<td bgcolor=#999999><input type=text name=percentage_{$s->id} value='{$s->getPercentage()}'></td>
+		<td bgcolor=#999999><input type=text name=signups_{$s->id} value='{$s->getSignups()}'></td>
+		<td bgcolor=#999999><input type=text name=priceperhit_{$s->id} value='{$s->getPricePerHit()}'></td>
+		<td bgcolor=#999999><input type=text name=pricepersignup_{$s->id} value='{$s->getPricepersignup()}'></td>
+		<td bgcolor=#999999><input type=text name=pricereducedpercancel_{$s->id} value='{$s->getPricereducedpercancel()}'></td>	
+		<td bgcolor=#999999><input type=text name=pricereducedperchargeback_{$s->id} value='{$s->getPricereducedperchargeback()}'></td>	
+		</tr>
+	{/foreach}
+    </table>
+	<br>
+	<input type=submit value='Save These Scales'>
+	<br>
+	<Br>
+	<br>
+	<br>
+	<a name='description'>
+	ok, you can techncially pay out by conversion ratio or based on number of signups. currently the system is only set up to 
+	pay out on number of signups. so make sure that for percentage you always put a 0.
+	make sure you fill out every feidl as well.
+	now the way this works is that if you want to pay $20 per signup for up to 10 signups then you want to pay $25 per sign up from 11 signups to 31 signups, then 31+ signups you want to pay $35 per signup you would do it like this:
+	<br>
+	the first entry you would put 10 in the signups box and 20 in the persignup box. this means that 0-10 signups will pay $20 per signup.<br>
+	then you would make a second entry and put 31 in the signups box and 25 in teh per signup box.<br>
+	then you would make another entry but put a large number like 999999999 for signups and put 35 in the pay per signup box. this means that signups 32 till 999999999 signups will pay 35 per signup
+	
+    <FONT face=Arial,Helvetica,sans-serif color=white size=1><br>
+    <br>
+    <img src="../images/longhorizline.gif" width="637" height="1"><br>
+          <br>
+          <a href="../admin/manage_scale.php"><img src="../images/managescale.gif" alt="Manage Scale" width="162" height="33" border="0"></a><br>
+          <a href="../admin/manage_sites.php"><img src="../images/managesites.gif" alt="Manage Sites" width="162" height="28" border="0"></a><a href="../admin/payout.php"><img src="../images/payoutreport.gif" alt="Payout Report" width="162" height="28" border="0"></a>
+          <img src="../images/statistics02.gif" alt="Statistics" width="162" height="28" border="0"><br>
+          <a href="../admin/stats_by_affiliate.php"><img src="../images/statsbyaffiliate.gif" alt="Statistic by Affiliate" width="162" height="28" border="0"></a><a href="../admin/manage_affiliates.php"><img src="../images/manageaffiliates.gif" alt="Manage Affiliates" width="162" height="28" border="0"></a><a href="../admin/manage_config.php"><img src="../images/configuration.gif" alt="Configuration" width="162" height="28" border="0"></a><br>
+    <br>
+          <img src="../images/longhorizline.gif" width="637" height="1">      <br>
+&copy; Copyright 2001 - 2004 0x7A69 Technologies. All Rights Reserved. </FONT>
+    
+    </td>
+
+
+    </div>

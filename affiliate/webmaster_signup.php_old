@@ -1,0 +1,128 @@
+<?php
+//webmaster signup
+require_once('../phpinclude/classWebmaster.inc.php');
+require_once('../phpinclude/classAffiliateLogin.inc.php');
+require_once('../phpinclude/classAffiliate.inc.php');
+require_once('../phpinclude/classSmartyEC.inc.php');
+require_once('../phpinclude/classAPConfig.inc.php');
+main();
+
+function main()
+{
+	@$action = $_REQUEST['action'];
+	switch($action)
+	{
+		
+		case 'add_webmaster':
+			validate_fields();
+			add_webmaster();
+			break;	
+		case '':
+		default:
+			show_join_page($_REQUEST);
+			break;
+			
+	}	
+}
+function add_webmaster()
+{
+	$webmaster =& new Webmaster();
+	$error = $webmaster->checkExistance($_REQUEST);
+	$auth =& new AffiliateLogin(false, false); 
+	$error .= $auth->checkUsername($_REQUEST['username']);
+	
+	if($error)
+	{
+		$_REQUEST['error'] = $error;
+		//show_join_page($_REQUEST);	
+		//exit;
+	}
+	  
+	$webmaster->setFirstname($_REQUEST['firstname']);
+	$webmaster->setLastname($_REQUEST['lastname']);
+	$webmaster->setStreetAddress($_REQUEST['street_address']);
+	$webmaster->setCity($_REQUEST['city']);
+	$webmaster->setState($_REQUEST['state']);
+	$webmaster->setPostalCode($_REQUEST['postal_code']);
+	$webmaster->setCountry($_REQUEST['country']);
+	$webmaster->setEmail($_REQUEST['email']);
+	$webmaster->setSsnTaxid($_REQUEST['ssn_taxid']);
+	$webmaster->setAim($_REQUEST['aim']);
+	$webmaster->setIcq($_REQUEST['icq']);
+	$webmaster->setCompany($_REQUEST['company']);
+	$webmaster->setPayTo($_REQUEST['payto']);
+	$webmaster->setReferredWebmasterId($_REQUEST['referred_webmaster_id']);
+	$webmaster->save();
+	
+	$affiliate =& new Affiliate();
+	$affiliate->setWebmasterId($webmaster->getId());
+	$Affiliate->setProgramId($program_id);
+	$affiliate->setStatus('ACTIVE');
+	$affiliate->save();
+	
+	$auth->setUsername($_REQUEST['username']);
+	$auth->setPassword($_REQUEST['password']);
+	$auth->setAffiliateId($affiliate->getId());
+	
+	$_REQUEST['affiliate_id'] = $affiliate->getId();
+	show_success_page($_REQUEST);
+
+	ob_start();
+                print date("Y-m-d H:i:s") . "\n";
+                print_r($_REQUEST);
+                $stuff = ob_get_contents();
+                ob_end_clean();
+
+    $conf = new APConfig();
+	$conf_vars = $conf->get_all_vars();	
+	
+	mail($conf_vars['admin_email'], "New  " . $conf_vars['site_name'] . " Affiliate Signup", "Affiliate link: " . $conf_vars['base_url'] . "/track/track.php?sid=1&aid=" . $affiliate->getId() . "\n\nInfo: \n$stuff");
+	
+	//send welcome letter
+	if($conf_vars['welcome_letter_location'] && file_exists($conf_vars['welcome_letter_location']))
+	{
+		$file = file_get_contents($conf_vars['welcome_letter_location']);
+		//username, password, baseurl, affilaite_id
+		$contents = preg_replace("/%username%/", $_REQUEST['username'], $file);	
+		$contents = preg_replace("/%password%/", $_REQUEST['password'], $contents);	
+		$contents = preg_replace("/%base_url%/", $conf_vars['base_url'], $contents);	
+		$contents = preg_replace("/%affiliate_id%/", $affiliate->getId(), $contents);	
+		mail($_REQUEST['email'], "Welcome To " . $conf_vars['site_name'], $contents);
+	}
+
+		
+}
+function show_join_page($vars)
+{
+	$smarty = new SmartyEC("../templates");
+	$smarty->assign($vars);
+	$smarty->assign('referred_webmaster_id', $_COOKIE['referred_webmaster_id']);
+	$smarty->display('webmaster_signup.html');	
+}
+/**
+* real simple for now
+*/
+function validate_fields()
+{
+	$error = '';
+	foreach($_REQUEST as $key => $val)
+	{
+		if(!$val && $key != 'referred_webmaster_id')
+		{
+			$error .= "$key is blank. ";	
+		}	
+	}	
+	if($error)
+	{
+		$_REQUEST['error'] = $error;
+		show_join_page($_REQUEST);
+		exit;	
+	}
+}
+function show_success_page($vars)
+{	
+	$smarty = new SmartyEC("../templates");
+	$smarty->assign($vars);
+	$smarty->display('webmaster_signup_success.html');
+}
+?>

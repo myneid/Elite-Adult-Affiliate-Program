@@ -1,0 +1,39 @@
+{include file="header.html"}
+{literal}
+<script language="javascript">
+do_sub_menu('stats');
+</script>
+{/literal}
+<b><font size="4"><br>
+          Statistics</font></b><br>
+
+  <br>
+  <b><font size="2">Referring URL report for <span class="earnedincome">{$date}</span></font></b><br>
+  <br>
+          <table width="600" border="1" align="center" bordercolor="#000000" cellspacing="0" cellpadding="0" height="245">
+    <tr align="center" bgcolor="#333333">
+      <td width="225"><b><font face="Arial, Helvetica, sans-serif" size="2">Referring URL</font></b></td>
+
+      <td width="75"><b><font face="Arial, Helvetica, sans-serif" size="2">Raws</font></b></td>
+      <td width="75"><b><font face="Arial, Helvetica, sans-serif" size="2">Uniques</font></b></td>
+      <td width="65"><b><font face="Arial, Helvetica, sans-serif" size="2">Signups</font></b></td>
+      <td width="85"><b><font face="Arial, Helvetica, sans-serif" size="2">Ratio</font></b></td>
+      <td width="75"><b><font face="Arial, Helvetica, sans-serif" size="2">Income</font></b></td>
+    </tr>
+
+    {foreach name=outer key=refurl item=stats from=$stats}
+    <tr align="center" bgcolor="#999999">
+      <td width="225"><font face="Arial, Helvetica, sans-serif" size="2">{$refurl}</font></td>
+      <td width="75"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.hits}</font></td>
+      <td width="75"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.uniques}</font></td>
+      <td width="65"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.signups}</font></td>
+      <td width="85"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.ratio}</font></td>
+      <td width="75"><font face="Arial, Helvetica, sans-serif" size="2">${$stats.income}</font></td>
+
+    </tr>
+    {/foreach}
+
+  </table>
+            <br>
+            </p>
+            {include file="footer.html"}

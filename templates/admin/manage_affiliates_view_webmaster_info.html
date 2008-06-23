@@ -1,0 +1,66 @@
+<link href="../affiliates.css" rel="stylesheet" type="text/css">
+<table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="top"><table width="639" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr align="center">
+        <td colspan="3"><div align="center">
+          <p><img src="../images/headertemplate.gif" width="463" height="74"><br>
+            <br>
+          <img src="../images/longhorizline.gif" width="637" height="1"></p>
+          </div></td>
+      </tr>
+      <div align="center">
+<input type=hidden name=action value=save_webmaster>
+<span class="header">{$error}</span>
+<br>
+<br>
+<table border=0>
+<input type=hidden name=webmaster_id value="{$webmaster_id}">
+<tr><td>First Name</td><td><input type=text name=firstname value='{$firstname}'></td></tr>
+<tr><td>Last Name</td><td><input type=text name=lastname value='{$lastname}'></td></tr>
+<tr><td>Street Address</td><td><input type=text name=street_address value='{$street_address}'></td></tr>
+<tr><td>City</td><td><input type=text name=city value='{$city}'></td></tr>
+<tr><td>State</td><td><input type=text name=state value='{$state}'></td></tr>
+<tr><td>Postal Code</td><td><input type=text name=postal_code value='{$postal_code}'></td></tr>
+<tr><td>Country</td><td><input type=text name=country value='{$country}'></td></tr>
+<tr><td>Email</td><td><input type=text name=email value='{$email}'></td></tr>
+<tr><td>SSN/Tax Id</td><td><input type=text name=ssn_taxid value='{$ssn_taxid}'></td></tr>
+
+<tr><td>Aim</td><td><input type=text name=aim value='{$aim}'></td></tr>
+<tr><td>ICQ</td><td><input type=text name=icq value='{$icq}'></td></tr>
+<tr><td>Company</td><td><input type=text name=company value='{$company}'></td></tr>
+<tr><td>Pay To</td><td><input type=text name=pay_to value='{$pay_to}'></td></tr>
+<tr><td>Minimum Payout</td><td><input type=text name=minimum_payout value='{$minimum_payout}'></td></tr>
+<tr><td>Payment Method</td><td><input type=text name=payment_method value='{$payment_method}'></td></tr>
+<tr><td>Referral Percent</td><td><input type=text name=referral_percent value='{$referral_percent}'></td></tr>
+<tr><td>Referred Webmaster ID</td><td><input type=text name=referred_webmaster_id value='{$referred_webmaster_id}'></td></tr>
+<tr><td>Notes</td><td><textarea name=notes>{$notes}</textarea></td></tr>
+
+
+
+</table>
+
+{foreach key=aid item=aff_login from=$affiliate_ids}
+<table border=1 cellpadding="0" cellspacing="0">
+<tr bgcolor="#333333"><th colspan=2 class="header">Affiliate ID {$aid}</th></tr>
+<tr bgcolor="#999999"><td>Username</td><td><input type=text name=username_{$aid} value='{$aff_login.username}'></td></tr>
+<tr bgcolor="#999999"><td>Password</td><td><input type=text name=password_{$aid} value='{$aff_login.password}'></td></tr>
+</table>
+{/foreach}
+<input type=submit>
+</div>
+      <tr>
+        <td colspan="3" align="center" valign="top" nowrap><br></td>
+      </tr>
+    <tr>
+    <td valign="bottom"><div align="center"><FONT face=Arial,Helvetica,sans-serif color=white size=1><img src="../images/longhorizline.gif" width="637" height="1"><br>
+          <br>
+          <a href="../admin/manage_scale.php"><img src="../images/managescale.gif" alt="Manage Scale" width="162" height="33" border="0"><br>
+          </a><a href="../admin/manage_sites.php"><img src="../images/managesites.gif" alt="Manage Sites" width="162" height="28" border="0"></a><a href="../admin/payout.php"><img src="../images/payoutreport.gif" alt="Payout Report" width="162" height="28" border="0"></a><a href="../admin/stats.php">
+          <img src="../images/statistics.gif" alt="Statistics" width="162" height="28" border="0"><br>
+          </a><a href="../admin/stats_by_affiliate.php"><img src="../images/statsbyaffiliate.gif" alt="Statistic by Affiliate" width="162" height="28" border="0"></a><img src="../images/manageaffiliates02.gif" alt="Manage Affiliates" width="162" height="28" border="0"><a href="../admin/manage_config_list.php"><img src="../images/configuration.gif" alt="Configuration" width="162" height="28" border="0"></a><br>
+<br>
+          <img src="../images/longhorizline.gif" width="637" height="1">      <br> 
+    &copy; Copyright 2001 - 2004 0x7A69 Technologies. All Rights Reserved. </FONT></div></td>
+  </tr>
+

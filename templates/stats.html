@@ -1,0 +1,163 @@
+{include file="header.html"}
+
+          <font face="Arial, Helvetica, sans-serif"><b><font size="4">Statistics
+</font></b><br>
+
+  <br>
+  <b><font size="2">Summary for {$begin_date} - {$end_date}</font></b><br>
+  <span class="earnedincome"><b><font size="3">Total Earned: ${$income}</font></b></span></font><br>
+  <br>
+
+        <table width="600" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" bordercolor="#000000" align="center">
+    <tr>
+      <td bgcolor="#000000">
+
+
+
+        <div align="center"><strong><font face="Arial, Helvetica, sans-serif" size="3"><b>Paysite
+          Per Signup Stats</b></font></strong></div>
+
+      </td>
+    </tr>
+  </table>
+  <table width="600" border="1" cellspacing="0" cellpadding="0" align="center" height="50" bordercolor="#000000">
+    <tr align="center" bgcolor="#333333">
+      <td width="120">
+        <div align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Hits</font></b></div>
+      </td>
+      
+      <td width="120">
+        <div align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Signups</font></b></div>
+      </td>
+      <td width="120">
+        <div align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Crosssales</font></b></div>
+      </td>
+      <td width="120">
+        <div align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Ratio</font></b></div>
+      </td>
+      <td width="120">
+        <div align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Amount</font></b></div>
+
+      </td>
+       <td width="120">
+        <div align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Referral Amount</font></b></div>
+      </td>
+      <td width="120">
+        <div align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Income</font></b></div>
+      </td>
+    </tr>
+    <tr align="center" bgcolor="#999999">
+      <td width="120">
+        <div align="center"><font face="Arial, Helvetica, sans-serif" size="2">{$hits}</font></div>
+      </td>
+    
+
+      <td width="120">
+        <div align="center"><font face="Arial, Helvetica, sans-serif" size="2">{$signups}</font></div>
+      </td> 
+      <td width="120">
+        <div align="center"><font face="Arial, Helvetica, sans-serif" size="2">{$crosssales}</font></div>
+      </td>
+      <td width="120">
+        <div align="center"><font face="Arial, Helvetica, sans-serif" size="2">{$ratio}</font></div>
+      </td>
+      <td width="120">
+        <div align="center"><font face="Arial, Helvetica, sans-serif" size="2">${$income}</font></div>
+      </td>
+      <td width="120">
+        <div align="center"><font face="Arial, Helvetica, sans-serif" size="2">${$referral_income}</font></div>
+      </td>
+      <td width="120">
+        <div align="center"><font face="Arial, Helvetica, sans-serif" size="2">${$income+$referral_income}</font></div>
+      </td>
+
+    </tr>
+  </table>
+  <br>
+  <br>
+  <table width="600" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" bordercolor="#000000" align="center">
+
+    <tr>
+      <td bgcolor="#000000">
+        <div align="center" class="style2"><font face="Arial, Helvetica, sans-serif" size="3"><font size="2">Statistics
+          by Site</font></font></div>
+      </td>
+    </tr>
+  </table>
+  <table width="600" border="1" align="center" bordercolor="#000000" cellspacing="0" cellpadding="0" height="245">
+    <tr align="center" bgcolor="#333333">
+      <td width="225"><b><font face="Arial, Helvetica, sans-serif" size="2">Site
+        Name</font></b></td>
+
+      <td width="75"><b><font face="Arial, Helvetica, sans-serif" size="2">Hits</font></b></td>
+      <td width="65"><b><font face="Arial, Helvetica, sans-serif" size="2">Signups</font></b></td>
+      <td width="85"><b><font face="Arial, Helvetica, sans-serif" size="2">Ratio</font></b></td>
+      <td width="75"><b><font face="Arial, Helvetica, sans-serif" size="2">Income</font></b></td>
+    </tr>
+
+    {foreach name=outer key=site item=stats from=$stats_by_site}
+    <tr align="center" bgcolor="#999999">
+      <td width="225"><font face="Arial, Helvetica, sans-serif" size="2">{$site}</font></td>
+      <td width="75"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.hits}</font></td>
+      <td width="65"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.signups}</font></td>
+      <td width="85"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.ratio}</font></td>
+      <td width="75"><font face="Arial, Helvetica, sans-serif" size="2">${$stats.income}</font></td>
+
+    </tr>
+    {/foreach}
+
+  </table>
+  
+  <br>
+  <table width="600" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" bordercolor="#000000" align="center">
+    <tr>
+      <td bgcolor="#000000">
+        <div align="center" class="style2"><font face="Arial, Helvetica, sans-serif" size="3"><font size="2">Statistics
+          by Date</font></font></div>
+      </td>
+    </tr>
+  </table>
+
+<table width="600" border="1" cellspacing="0" cellpadding="0" bordercolor="#000000" height="347" align="center">
+  <tr bgcolor="#333333">
+      <td width="225" align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Date</font></b></td>
+
+      <td width="75" align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Hits</font></b></td>
+      <td width="65" align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Signups</font></b></td>
+      <td width="85" align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Ratio</font></b></td>
+      <td width="75" align="center"><b><font face="Arial, Helvetica, sans-serif" size="2">Income</font></b></td>
+    </tr>
+        {foreach name=outer2 key=date item=stats from=$stats_by_day}
+    <tr bgcolor="#999999">
+      <td width="225" height="19" align="center"><font face="Arial, Helvetica, sans-serif" size="2"><a href='stats_by_refurl.php?date={$date}'>{$date}</a></font></td>
+      <td width="75" height="19" align="center"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.hits}</font></td>
+      <td width="65" height="19" align="center"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.signups}</font></td>
+      <td width="85" height="19" align="center"><font face="Arial, Helvetica, sans-serif" size="2">{$stats.ratio}</font></td>
+      <td width="75" height="19" align="center"><font face="Arial, Helvetica, sans-serif" size="2">${$stats.income}</font></td>
+
+    </tr>
+    {/foreach}
+
+  </table>
+  <br>
+  <br>
+<form action=stats.php>
+  <table width="600" border="0" align="center">
+    <tr>
+      <td align="center">
+        <br>
+        <b><font face="Arial, Helvetica, sans-serif" size="2">Stats by Range<br>
+        </font></b>
+        {html_select_date prefix="start" time=$begin_date start_year=2005}
+        to
+                {html_select_date prefix="end" time=$end_date start_year=2005}
+        <br>
+        <input type="submit" name="Submit22" value="View Stats">
+                <input type="hidden" name="t" value="{$t}">
+      </td>
+    </tr>
+  </table>
+</form>
+  <br>
+          </p>
+           {include file="footer.html"}

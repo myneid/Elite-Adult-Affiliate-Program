@@ -1,0 +1,79 @@
+
+<head>
+{literal}
+<style>
+<!--
+td           { font-family: Verdana; font-size:8pt }
+a:link       { font-family: Verdana; font-size: 8pt; text-decoration: none; color: #000000 }
+a:visted	 { font-family: Verdana; font-size: 8pt; text-decoration: none; color: #000000 }
+a            { color: #000000; text-decoration: none; font-family: Verdana; font-size: 8pt }
+-->
+</style>
+{/literal}
+</head>
+
+{include file="header.html"}
+{literal}
+<script language="javascript">
+do_sub_menu('links');
+</script>
+{/literal}
+{if $t eq 'all' or $t eq 'webmaster'}         
+<br>
+Webmaster Referal
+<br>
+{$referral_link}
+{/if}
+<br><br>
+{if $t eq 'pps' or $t eq 'all'}
+<div align="center" width="80%">
+<center></center>
+<div align="center">
+<table border=1 width="80%" style="border-collapse: collapse" bordercolor="#000000">
+<tr><td colspan="4" align="center"><b><font size="3">GET YOUR LINK CODES HERE FOR ALL OF OUR 
+	SITES</font></b><br>
+&nbsp;</td></tr>
+<tr>
+<td width="25%" bgcolor="#AC96AC">SITES</td>
+<td width="52%" bgcolor="#AC96AC">LINKS COPY AND PASTE</td>
+<td width="11%" bgcolor="#AC96AC">
+<p align="center">BANNERS</td>
+<td width="10%" bgcolor="#AC96AC">
+<p align="right">PAYOUT</td>
+</tr></table>
+{foreach item=site from=$links}
+<table border=1 width="80%" style="border-collapse: collapse" bordercolor="#000000">
+<tr>
+<td width="25%"><a href="{$site.url}">{$site.site_name}</a> <a name="{$site.site_name}"></a> </td>
+<td width="52%">
+<p>
+<input type="text" name="T1" size="55" value="{$site.link}" style="font-family: Verdana; font-size: 8pt"></p>
+</td>
+<td width="11%" rowspan="2">
+<p align="center"><A HREF="banners.php?sid={$site.id}">BANNERS</A></td>
+<td width="10%" align="right">
+UP TO $45</td>
+</tr>
+<tr>
+<td width="25%">
+<p align="right">No pop&nbsp;&nbsp;</td>
+<td width="52%">
+<input type="text" name="T2" size="55" value="{$site.link}&amp;program_id=2" style="font-family: Verdana; font-size: 8pt"></td>
+<td width="10%" align="right">
+$20</td>
+</tr>
+<tr>
+<td width="98%" colspan="4" bgcolor="#AC96AC">
+&nbsp;</td>
+</tr>
+</table>
+{/foreach}
+</center></div></div>
+<br/>
+{/if}
+{if $t eq 'revshare'}
+Sorry currently we are not allowing revshare.
+{/if}
+ 
+
+    {include file="footer.html"}

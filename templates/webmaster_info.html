@@ -1,0 +1,81 @@
+{include file="header.html"}
+      <form action=? method=post>
+<center><input type=hidden name=action value=save_webmaster>
+  <span class="errortext">{$error}</span>
+  <br>
+</center>
+<table border=0 align="center">
+<input type=hidden name=webmaster_id value="{$webmaster_id}">
+<tr>
+  <td align="right"><font face="Verdana" size="1">First Name:&nbsp;</font></td>
+  <td><input type=text name=firstname value='{$firstname}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Last Name:&nbsp;</font></td>
+  <td><input type=text name=lastname value='{$lastname}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Street Address:&nbsp;</font></td>
+  <td><input type=text name=street_address value='{$street_address}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">City:&nbsp;</font></td>
+  <td><input type=text name=city value='{$city}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">State:&nbsp;</font></td>
+  <td><input type=text name=state value='{$state}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Postal Code:&nbsp;</font></td>
+  <td><input type=text name=postal_code value='{$postal_code}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Country:&nbsp;</font></td>
+  <td><input type=text name=country value='{$country}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Email:&nbsp;</font></td>
+  <td><input type=text name=email value='{$email}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">SSN/Tax Id:&nbsp;</font></td>
+  <td><input type=text name=ssn_taxid value='{$ssn_taxid}'></td></tr>
+
+<tr>
+  <td align="right"><font face="Verdana" size="1">Aim:&nbsp;</font></td>
+  <td><input type=text name=aim value='{$aim}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">ICQ:&nbsp;</font></td>
+  <td><input type=text name=icq value='{$icq}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Company:&nbsp;</font></td>
+  <td><input type=text name=company value='{$company}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Pay To:&nbsp;</font></td>
+  <td><input type=text name=pay_to value='{$pay_to}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Minimum Payout:&nbsp;</font></td>
+  <td><input type=text name=minimum_payout value='{$minimum_payout}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Payment Method:&nbsp;</font></td>
+  <td><input type=text name=payment_method value='{$payment_method}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Referral Percent:&nbsp;</font></td>
+  <td><input type=text name=referral_percent value='{$referral_percent}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Referred Webmaster ID:&nbsp;</font></td>
+  <td><input type=text name=referred_webmaster_id value='{$referred_webmaster_id}'></td></tr>
+<tr>
+  <td align="right"><font face="Verdana" size="1">Notes:&nbsp;</font></td>
+  <td><textarea name=notes>{$notes}</textarea></td></tr>
+
+
+
+</table>
+
+<br>
+<div align="center">{foreach key=aid item=aff_login from=$affiliate_ids}
+    <table border=0>
+    <tr bgcolor="#333333">
+      <th colspan=2><font face="Verdana">Affiliate ID: {$aid}</font></th>
+    </tr>
+    <tr bgcolor="#999999"><td><font face="Verdana" size="1">Username</font></td><td><input type=text name=username_{$aid} value='{$aff_login.username}'></td></tr>
+    <tr bgcolor="#999999"><td><font face="Verdana" size="1">Password</font></td><td><input type=text name=password_{$aid} value='{$aff_login.password}'></td></tr>
+    </table>
+    {/foreach}
+    <input type=submit>
+    </p>
+    {include file="footer.html"}

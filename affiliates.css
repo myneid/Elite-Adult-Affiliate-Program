@@ -1,0 +1,122 @@
+body {
+	
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background-color: #CCCC99;
+	color: #000000;
+	font-size: 9px
+}   
+a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-decoration: none;
+}
+.text {font-size: 9px
+}
+a:link {
+	color: #0033cc;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #0033cc;
+}
+a:hover {
+	text-decoration: none;
+	color: #003399;
+}
+a:active {
+	text-decoration: none;
+	color: #0033cc;
+}
+.style2 {
+	color: #FFFFCC;
+	font-weight: bold;
+}
+.earnedincome {color: #FFCC00}
+.header {color: #FFFFCC}
+
+td		
+		{
+		font-family: Arial, sans-serif; font-size:11px
+		}	
+.inputb
+		{
+		background-color="#AFAFAF";
+		font-family="arial";
+		font-size="11px";
+		}
+.inputt
+		{
+		font-family : arial;
+		font-size : 11px;
+		}	
+.inputs
+		{
+		font-family : arial;
+		font-size : 11px;
+		}	
+.rowA
+		{
+		padding-left:6px; padding-right:6px; background-color: #DFDFBF; color:#003366; text-decoration:none; FONT-FAMILY: Arial, Verdana, Arial, sans-serif; FONT-SIZE: 11px; LINE-HEIGHT: 127%
+		}	
+.rowB
+		{
+		padding-left:6px; padding-right:6px; background-color: #F2F2E6; color:#003366; text-decoration:none; FONT-FAMILY: Arial, Verdana, Arial, sans-serif; FONT-SIZE: 11px; LINE-HEIGHT: 127%
+		}	
+.rowA a 
+		{
+ 		color:#000000; text-decoration:none;
+		}
+.rowA a:hover
+		{
+ 		text-decoration:underline;
+ 		} 	
+.rowB a 
+		{
+ 		color:#883366; text-decoration:none;
+		}
+.rowB a:hover
+		{
+ 		text-decoration:underline;
+ 		} 			
+ .tabletop
+		{
+		padding:4; background-image: url("/images/tabletop_bg4.gif"); background-color: #cccc99; color:#5064B5; font-family:Arial, Verdana, Geneva, Arial,; font-size:11px; font-weight:bold
+		}
+.tabletop a 
+		{
+		color:#5064B5; text-decoration:none;
+		}
+.tabletop a:visited 
+ 		{
+	 	color:#5064B5; text-decoration:none;
+ 		}
+.tabletop a:hover 
+ 		{
+	 	color:#5064B5; text-decoration:underline;
+ 		}
+ .navfonthead
+		{
+		color:#FFFFFF; font-family:Arial, Verdana, Geneva, Arial,; font-size:11px; font-weight:bold
+		} 			
+ .navfont
+		{
+		color:black; font-family:Arial, Verdana, Geneva, Arial,; font-size:11px; line-height:125%;
+		}	
+.navfont a 
+		{
+		color:black; text-decoration:none;
+		}
+.navfont a:visited 
+ 		{
+	 	color:black; text-decoration:none;
+ 		}
+.navfont a:hover 
+ 		{
+	 	color:black; text-decoration:underline;
+ 		} 			
+ .version
+		{
+		font-family : arial;
+		font-size : 10px;
+		color:#E9B9CF;
+		}
