@@ -1,7 +1,8 @@
 body {
 	
+	background-image: url(/images/pagebg.gif);
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	background-color: #CCCC99;
+	background-color: #5E5E5E;
 	color: #000000;
 	font-size: 9px
 }   
@@ -12,24 +13,24 @@ a {
 .text {font-size: 9px
 }
 a:link {
-	color: #0033cc;
-	text-decoration: none;
+        color: #FFFFCC;
+        text-decoration: none;
 }
 a:visited {
-	text-decoration: none;
-	color: #0033cc;
+        text-decoration: none;
+        color: #FFFFCC;
 }
 a:hover {
-	text-decoration: none;
-	color: #003399;
+        text-decoration: none;
+        color: #999999;
 }
 a:active {
-	text-decoration: none;
-	color: #0033cc;
+        text-decoration: none;
+        color: #FFFFCC;
 }
 .style2 {
-	color: #FFFFCC;
-	font-weight: bold;
+        color: #FFFFCC;
+        font-weight: bold;
 }
 .earnedincome {color: #FFCC00}
 .header {color: #FFFFCC}
