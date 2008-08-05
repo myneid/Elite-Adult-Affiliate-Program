@@ -1,15 +1,9 @@
-
-<link href="../affiliates.css" rel="stylesheet" type="text/css">
-<div align="center"><p><img src="../images/headertemplate.gif" width="463" height="74"><br>
-            <br>
-          <img src="../images/longhorizline.gif" width="637" height="1"></p>
-</div>
-<div align="center"><strong>List Config</strong><br>
+<div align=left>
 {foreach key=id item=conf from=$configvars}
   <table border=0 cellpadding="0" cellspacing="0">
     <tr>
       <td align="right">Name:&nbsp;</td>
-      <td><font color="#000000">{$conf.name}</font> [ <a href='?action=edit_page&id={$id}'>EDIT</A> ]</td>
+      <td><font color="#000000">{$conf.name}</font> [ <a href="javascript:ajax_call('manage_config.php?action=edit_page&id={$id}', 'Edit Config')">EDIT</A> ]</td>
     </tr>
     <tr>
       <td align="right">Value:&nbsp;</td>
@@ -22,14 +16,5 @@
   </table>
   {/foreach} <br>
   <br>
+  </div>
   
-</div>
-<div align="center"><FONT face=Arial,Helvetica,sans-serif color=white size=1><img src="../images/longhorizline.gif" width="637" height="1"><br>
-          <br>
-          <a href="../admin/manage_scale.php"><img src="../images/managescale.gif" alt="Manage Scale" width="162" height="33" border="0"><br>
-          </a><a href="../admin/manage_sites.php"><img src="../images/managesites.gif" alt="Manage Sites" width="162" height="28" border="0"></a><a href="../admin/payout.php"><img src="../images/payoutreport.gif" alt="Payout Report" width="162" height="28" border="0"></a><a href="../admin/stats.php">
-          <img src="../images/statistics.gif" alt="Statistics" width="162" height="28" border="0"><br>
-          </a><a href="../admin/stats_by_affiliate.php"><img src="../images/statsbyaffiliate.gif" alt="Statistic by Affiliate" width="162" height="28" border="0"></a><a href="../admin/manage_affiliates.php"><img src="../images/manageaffiliates.gif" alt="Manage Affiliates" width="162" height="28" border="0"></a><img src="../images/configuration02.gif" alt="Configuration" width="162" height="27" border="0"><br>
-<br>
-          <img src="../images/longhorizline.gif" width="637" height="1">      <br> 
-    &copy; Copyright 2001 - 2004 0x7A69 Technologies. All Rights Reserved. </FONT></div>

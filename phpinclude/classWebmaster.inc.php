@@ -123,6 +123,9 @@ class Webmaster extends PEAR
 	*@var string
 	*/
 	var $udf1;
+	var $skype;
+	var $phone;
+	var $referral_amount;
 	/**
 	*determines weather this record was changed with the set accessor methods
 	*@var boolean
@@ -434,6 +437,32 @@ class Webmaster extends PEAR
 		}
 	}
 
+	function setSkype($skype)
+	{
+		if($this->skype != $skype)
+		{
+			$this->_modified = true;
+			$this->skype = $skype;
+		}
+	}
+
+	function setPhone($phone)
+	{
+		if($this->phone != $phone)
+		{
+			$this->_modified = true;
+			$this->phone = $phone;
+		}
+	}
+	function setReferralAmount($referral_amount)
+	{
+		if($this->referral_amount != $referral_amount)
+		{
+			$this->_modified = true;
+			$this->referral_amount = $referral_amount;
+		}
+	}
+
 	/**
 	* Acessor function to get the id variable
 	*
@@ -644,6 +673,20 @@ class Webmaster extends PEAR
 	{
 		return $this->udf1;
 	}
+
+	function getSkype()
+	{
+		return $this->skype;
+	}
+
+	function getPhone()
+	{
+		return $this->phone;
+	}
+	function getReferralAmount()
+	{
+		return $this->referral_amount;
+	}
 	/**
 	*this function will update or insert into the database as needed
 	*
@@ -656,8 +699,8 @@ class Webmaster extends PEAR
 		if($this->_record_exists)
 		{
 			//update
-			$query = "update Webmaster set firstname=?,lastname=?,ssn_taxid=?,street_address=?,postal_code=?,city=?,state=?,country=?,email=?,referred_webmaster_id=?,aim=?,icq=?,company=?,pay_to=?,payment_method=?,minimum_payout=?,notes=?,referral_percent=?,total_signups=?,udf1=? where id=?";
-			$valueArray = array($this->getFirstname(),$this->getLastname(),$this->getSsnTaxid(),$this->getStreetAddress(),$this->getPostalCode(),$this->getCity(),$this->getState(),$this->getCountry(),$this->getEmail(),$this->getReferredWebmasterId(),$this->getAim(), $this->getIcq(), $this->getCompany(), $this->getPayTo(),$this->getPaymentMethod(),$this->getMinimumPayout(),$this->getNotes(),$this->getReferralPercent(), $this->getTotalSignups(), $this->getUdf1(), $this->getId());
+			$query = "update Webmaster set firstname=?,lastname=?,ssn_taxid=?,street_address=?,postal_code=?,city=?,state=?,country=?,email=?,referred_webmaster_id=?,aim=?,icq=?,company=?,pay_to=?,payment_method=?,minimum_payout=?,notes=?,referral_percent=?,total_signups=?,udf1=?,skype=?,phone=?,referral_amount=? where id=?";
+			$valueArray = array($this->getFirstname(),$this->getLastname(),$this->getSsnTaxid(),$this->getStreetAddress(),$this->getPostalCode(),$this->getCity(),$this->getState(),$this->getCountry(),$this->getEmail(),$this->getReferredWebmasterId(),$this->getAim(), $this->getIcq(), $this->getCompany(), $this->getPayTo(),$this->getPaymentMethod(),$this->getMinimumPayout(),$this->getNotes(),$this->getReferralPercent(), $this->getTotalSignups(), $this->getUdf1(), $this->getSkype(), $this->getPhone(), $this->getReferralAmount(), $this->getId());
 		}
 		else
 		{
@@ -665,8 +708,8 @@ class Webmaster extends PEAR
 			if($this->getId() == '')
 				$this->setId($this->_generateNextId());
 
-			$query = "insert into Webmaster (id,firstname,lastname,ssn_taxid,street_address,postal_code,city,state,country,email,referred_webmaster_id,aim,icq,company,pay_to,payment_method,minimum_payout,notes,referral_percent,total_signups,udf1) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			$valueArray = array($this->getId(),$this->getFirstname(),$this->getLastname(),$this->getSsnTaxid(),$this->getStreetAddress(),$this->getPostalCode(),$this->getCity(),$this->getState(),$this->getCountry(),$this->getEmail(),$this->getReferredWebmasterId(),$this->getAim(), $this->getIcq(), $this->getCompany(), $this->getPayTo(), $this->getPaymentMethod(), $this->getMinimumPayout(), $this->getNotes(), $this->getReferralPercent(),$this->getTotalSignups(),$this->getUdf1());
+			$query = "insert into Webmaster (id,firstname,lastname,ssn_taxid,street_address,postal_code,city,state,country,email,referred_webmaster_id,aim,icq,company,pay_to,payment_method,minimum_payout,notes,referral_percent,total_signups,udf1,skype,phone,referral_amount) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			$valueArray = array($this->getId(),$this->getFirstname(),$this->getLastname(),$this->getSsnTaxid(),$this->getStreetAddress(),$this->getPostalCode(),$this->getCity(),$this->getState(),$this->getCountry(),$this->getEmail(),$this->getReferredWebmasterId(),$this->getAim(), $this->getIcq(), $this->getCompany(), $this->getPayTo(), $this->getPaymentMethod(), $this->getMinimumPayout(), $this->getNotes(), $this->getReferralPercent(),$this->getTotalSignups(),$this->getUdf1(),$this->getSkype(),$this->getPhone(),$this->getReferralAmount());
 		}
 		$sth = $this->db->prepare($query);
 		$res = $this->db->execute($sth, $valueArray);
@@ -716,7 +759,10 @@ class Webmaster extends PEAR
 		$this->setMinimumPayout($row['minimum_payout']);
 		$this->setNotes($row['notes']);
 		$this->setReferralPercent($row['referral_percent']);
+		$this->setReferralAmount($row['referral_amount']);
 		$this->setUdf1($row['udf1']);
+		$this->setSkype($row['skype']);
+		$this->setPhone($row['phone']);
 		$this->setTotalSignups($row['total_signups']);
 		$this->_record_exists = true;
 		$this->_modified = false;
@@ -821,8 +867,9 @@ class Webmaster extends PEAR
 	{
 		$return = array();
 		$affiliate = new Affiliate($this->db);
-		foreach($income as $affiliate_id => $income)
+		foreach($income as $affiliate_id => $income_info)
 		{
+			$income = $income_info['total'];
 			if($income <= 0)
 				continue;
 			if(!$affiliate_id)
@@ -838,6 +885,8 @@ class Webmaster extends PEAR
 			{
 				$t = array();
 				$t['income'] = $income;
+				$t['current_income'] = $income_info['current'];
+				$t['rollover_income'] = $income_info['rollover'];
 				$t['affiliate_id'] = $affiliate_id;
 				$t['firstname'] = $this->getFirstName();
 				$t['lastname'] = $this->getLastname();
@@ -851,6 +900,8 @@ class Webmaster extends PEAR
 				$t['payout_method'] = $this->getPaymentMethod();
 				$t['notes'] = $this->getNotes();
 				$t['udf1'] = $this->getUDF1();
+				$t['skype'] = $this->getSkype();
+				$t['phone'] = $this->getPhone();
 				array_push($return, $t);	
 			}
 		}
@@ -887,4 +938,3 @@ class Webmaster extends PEAR
 	}
 }
 
-?>

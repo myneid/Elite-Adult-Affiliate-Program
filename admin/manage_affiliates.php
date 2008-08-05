@@ -1,4 +1,5 @@
 <?php
+//ini_set('display_errors', true);
 //affiliate management
 //search for an affiliate
 //display list of searched for affilaites
@@ -9,7 +10,6 @@ require_once('../phpinclude/classAffiliateLogin.inc.php');
 require_once('../phpinclude/classSmartyEC.inc.php');
 require_once('../phpinclude/classWebmaster.inc.php');
 require_once('../phpinclude/classWireInfo.inc.php');
-require_once('../phpinclude/classAPConfig.inc.php');
 
 main();
 function main()
@@ -57,15 +57,12 @@ function view_by_affid()
 }
 function do_aff_login()
 {
-	$config = new APConfig();
-	$conf_vars = $config->get_all_vars();
-
 	@session_start();
 	$affSession = new AffiliateLogin( false, false );
 	$affSession->getByAffiliateID( $_REQUEST['affid'] );
 	$q = "update AffiliateLogin set session_id=NULL where session_id=?";
 	$affSession->db->query( $q, array( session_id() ));
-	header( "Location: ".$conf_vars['base_url']."/affiliate/stats.php?username={$affSession->username}&password={$affSession->password}" );
+	header( "Location: http://freelifetimecash.com/affiliate/stats.php?username={$affSession->username}&password={$affSession->password}" );
 	exit;
 }
 function save_webmaster()
@@ -90,6 +87,7 @@ function save_webmaster()
 	$webmaster->setPaymentMethod($_REQUEST['payment_method']);
 	$webmaster->setNotes($_REQUEST['notes']);
 	$webmaster->setReferralPercent($_REQUEST['referral_percent']);
+	$webmaster->setReferralAmount($_REQUEST['referral_amount']);
 	$webmaster->setReferredWebmasterId($_REQUEST['referred_webmaster_id']);
 	$webmaster->setUDF1( $_REQUEST['udf1'] );
 	
@@ -110,6 +108,7 @@ function save_webmaster()
 		$affiliate =& new Affiliate();
 		$affiliate->getById($aid);
 		$affiliate->setStatus($_REQUEST["status_$aid"]);
+		$affiliate->setRating($_REQUEST["rating_$aid"]);
 	}
 	//print "<script language=javascript>history.go(-2)</script>";
 	
@@ -147,7 +146,8 @@ function view_wire_info()
 	$smarty->assign('intermediaryaccountnumber', $wireinfo->getIntermediaryAccountNumber() );
 	$smarty->assign('other', $wireinfo->getOther() );
 
-	$smarty->display('admin/manage_affiliates_view_wire_info.html');
+	$output['body']=$smarty->fetch('admin/manage_affiliates_view_wire_info.html');
+	_ajax_output($output);	
 }
 function save_wire_info()
 {
@@ -191,18 +191,19 @@ function view_webmaster_info()
 		$affiliate = new Affiliate();
 		$affiliate->getById($aid);
 		$aids[$aid]['status'] = $affiliate->getStatus();
+		//$aids[$aid]['rating'] = $affiliate->getRating();
 		
 		//check scale
 		$res = $webmaster->db->query("select * from Scale where affiliate_id=?", array($aid));
 		if($res->numRows() == 0)
 		{
 			//uses default scale, click here to create a custom scale
-			$aids[$aid]['scale_text'] = "Uses Default pay scale. <a href='manage_scale.php?affiliate_id=$aid'>Click here to give a custom pay scale.</a>";
+			$aids[$aid]['scale_text'] = "Uses Default pay scale. <a href='javascript:ajax_call(\"manage_scale.php?affiliate_id=$aid\", \"Manage Scale\")'>Click here to give a custom pay scale.</a>";
 		}
 		else 
 		{
 			//uses a custom scale, click here to view/modify it or click here to delete it and use the default scale
-			$aids[$aid]['scale_text'] = "Uses Custom pay scale. <a href='manage_scale.php?affiliate_id=$aid'>Click here to edit pay scale.</a>  <a href='manage_scale.php?affiliate_id=$aid&action=delete'>Click here to delete custom pay scale.</a>";
+			$aids[$aid]['scale_text'] = "Uses Custom pay scale. <a href='javascript:ajax_call(\"manage_scale.php?affiliate_id=$aid\", \"Manage Scale\")'>Click here to edit pay scale.</a>  <a href='javascript:ajax_call(\"manage_scale.php?affiliate_id=$aid&action=delete\", \"Delete Scale\")'>Click here to delete custom pay scale.</a>";
 	
 		}
 	}
@@ -243,6 +244,7 @@ function view_webmaster_info()
 	$smarty->assign('payment_method', $webmaster->getPaymentMethod());
 	$smarty->assign('notes', $webmaster->getNotes());
 	$smarty->assign('referral_percent', $webmaster->getReferralPercent());
+	$smarty->assign('referral_amount', $webmaster->getReferralAmount());
 	$smarty->assign('udf1', $webmaster->getUDF1());
 	
 	$smarty->assign('countries', $countries);
@@ -251,19 +253,17 @@ function view_webmaster_info()
 	
 	$smarty->assign('affiliate_statuss', array('ACTIVE'=>'ACTIVE', 'DISABLED'=>'DISABLED', 'DISABLED-SPAM'=>'DISABLED-SPAM'));
 	$smarty->assign('payment_methods', $payment_methods );
-	$smarty->assign('wirelink', '[ <A HREF="'.$PHP_SELF."?action=view_wire_info&webmaster_id=".$_REQUEST['webmaster_id'].'">Manage Wire Payment Info</a> ]');
+	$smarty->assign('wirelink', '[ <A HREF="'.$_SERVER['PHP_SELF']."?action=view_wire_info&webmaster_id=".$_REQUEST['webmaster_id'].'">Manage Wire Payment Info</a> ]');
 	
-	$smarty->display('admin/manage_affiliates_view_webmaster_info.html');
-	
+	$output['body']=$smarty->fetch('admin/manage_affiliates_view_webmaster_info.html');
+	_ajax_output($output);	
 	
 }
 function search()
 {
 	$db = new AffiliateProgramDB();
 	$db->connect_to_db();
-	$config = new APConfig( $db );
-	$conf_vars = $config->get_all_vars();
-	$res = 	$db->query("select * from Webmaster,Affiliate,AffiliateLogin where Affiliate.webmaster_id=Webmaster.id and Affiliate.id=AffiliateLogin.affiliate_id and (firstname like ? or lastname like ? or ssn_taxid like ? or street_address like ? or postal_code like ? or city like ? or state like ? or country like ? or email like ? or referred_webmaster_id like ? or aim like ? or icq like ? or company like ? or pay_to like ? or  username like ? or  Affiliate.id like ?)", array('%' . $_REQUEST['search_for'] . '%', '%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%'));
+	$res = 	$db->query("select * from Webmaster,Affiliate,AffiliateLogin where Affiliate.webmaster_id=Webmaster.id and Affiliate.id=AffiliateLogin.affiliate_id and (firstname like ? or lastname like ? or ssn_taxid like ? or street_address like ? or postal_code like ? or city like ? or state like ? or country like ? or email like ? or referred_webmaster_id like ? or aim like ? or icq like ? or company like ? or pay_to like ? or  username like ? or  Affiliate.id like ?) order by Affiliate.id", array('%' . $_REQUEST['search_for'] . '%', '%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%','%' . $_REQUEST['search_for'] . '%'));
 	if(DB::isError($res))
 		print_r($res);
 	$smarty = new SmartyEC("../templates");
@@ -274,14 +274,31 @@ function search()
 		array_push($return, $row);
 	}
 	$smarty->assign(array('affiliates' => $return));
-	$smarty->assign( 'base_url', $conf_vars['base_url'] );
-	$smarty->display('admin/manage_affiliates_search_results.html');	
+	$output['body']=$smarty->fetch('admin/manage_affiliates_search_results.html');	
+	_ajax_output($output);	
 	
 }
 function print_search_box()
 {
 	$smarty = new SmartyEC("../templates");
-	$smarty->display('admin/manage_affiliates_searchbox.html');		
+	$smarty->clear_all_cache();
+	$output['body']=$smarty->fetch('admin/manage_affiliates_searchbox.html');	
+	_ajax_output($output);	
 }
 
-?>
+function forward_to_main_page()
+{
+	//print "<script language=javascript>location.href='?'</script>";
+	//print "<a href='?'>Continue</a>";
+	$output = array();
+	$output['ajax_call'] = 'manage_affiliates.php';
+	_ajax_output($output);
+}
+
+function _ajax_output($output)
+{
+	require_once('../phpinclude/JSON.php');
+        $json = new Services_JSON();
+        $output = $json->encode($output);
+        print $output;
+}

@@ -1,18 +1,383 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>0x7A69 Technologies Affiliate Program</title>
+{literal}
+<style type="text/css">
+<!--
+-->
+</style>
 <link href="../affiliates.css" rel="stylesheet" type="text/css">
-<center><table width=750 height=150 bgcolor=333333 border=0 cellpadding=0 cellspacing=0><tr><td><img src=/images/adminheader.gif></td></tr></table>
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#000000" width="750" >
-  <tr> <td width="100%" height=100% valign="top" align=center    background=/images2/bg.gif>
-	 <center><br><br><font size=3><b Admin</b></font><br><img src="../images/longhorizline.gif" width="637" height="1"><br><br>
-  
-  <table>
-	  <tr>
-        <td width="164" align="center" valign="top" nowrap><p><a href="manage_scale.php"><img src="../images/managescale.gif" alt="Manage Scale" width="162" height="33" border="0"></a><a href="manage_sites.php"><img src="../images/managesites.gif" alt="Manage Sites" width="162" height="28" border="0"></a><a href="payout.php"><img src="../images/payoutreport.gif" alt="Payout Report" width="162" height="28" border="0"></a><a href="stats.php"><img src="../images/statistics.gif" alt="Statistics" width="162" height="28" border="0"></a><a href="stats_by_affiliate.php"><img src="../images/statsbyaffiliate.gif" alt="Statistic by Affiliate" width="162" height="28" border="0"></a><a href="manage_affiliates.php"><img src="../images/manageaffiliates.gif" alt="Manage Affiliates" width="162" height="28" border="0"></a><a href="manage_config.php"><img src="../images/configuration.gif" alt="Configuration" width="162" height="28" border="0"></a><br>
-<img src="../images/lefthorizbar.gif" width="162" height="1"></p>
+<style type="text/css">
+<!--
+.admincontenttext {font-size: 9px}
+-->
+</style>
+
+
+<script language="javascript">
+function getHTTPObject() {
+  var xmlhttp;
+  /*@cc_on
+  @if (@_jscript_version >= 5)
+    try {
+      xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (e) {
+      try {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } catch (E) {
+        xmlhttp = false;
+      }
+    }
+  @else
+  xmlhttp = false;
+  @end @*/
+  if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
+    try {
+      xmlhttp = new XMLHttpRequest();
+    } catch (e) {
+      xmlhttp = false;
+    }
+  }
+  return xmlhttp;
+}
+var http = getHTTPObject(); 
+var navigation = new Array();
+var navigation_i = 1;
+var navigation_direction = 'forward'; //is forward or back
+navigation[0] = new Array();
+navigation[0]['name'] = 'Index';
+navigation[0]['url'] = 'index.php';
+
+function ajax_post(url, form)
+{
+	document.getElementById('loading').style.visibility = "visible";
+	if(!form)
+		form = document.forms['myform'];
+	var useHidden=true;
+	
+	var params = ''; //params is a querystring type thing
+	for(field=0; field<=form.length; field++)
+	{
+	//for (var field in frm){
+
+		if (form[field] && form[field].type){
+			switch (form[field].type.toLowerCase()){
+				case "text":{
+					params += form[field].name + "=" + escape(form[field].value) + "&";
+					break;
+				}
+				case "textarea":{
+					params += form[field].name + "=" + escape(form[field].value) + "&";
+					break;
+				}
+
+                case "hidden":{
+                    if (useHidden) {
+                        params += form[field].name + "=" + escape(form[field].value) + "&";
+                        
+                        break;
+                    }
+                }
+                case "select-one":{
+                	params += form[field].name + "=" + escape(form[field][form[field].selectedIndex].value) + "&";
+               		break;
+                 }
+                case "radio":{
+                	if(form[field].checked)
+                	{
+                		params += form[field].name + "=" + escape(form[field].value) + "&";
+                		if(form[field].name == 'kind' && form[field].value == 'summary')
+                		{
+                        	setTimeout('page_reload()', 300000);
+                		}
+                	}
+               		break;
+                 }
+                 
+                
+                	
+			}
+		}
+	}
+
+	
+	http.open('POST', url, true);
+	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	http.setRequestHeader("Content-length", params.length);
+	http.setRequestHeader("Connection", "close");
+	http.onreadystatechange = ajax_output;
+	http.send(params + "ajax=1");
+	
+	if(navigation_direction == 'forward')
+	{
+		navigation[navigation_i] = new Array();
+		navigation[navigation_i]['name'] = 'Form';
+		navigation[navigation_i]['url'] = url + '?' + params;
+		navigation_i++;
+	}
+	navigation_direction = 'forward'; //just reset this
+	
+}
+function ajax_call(url, title)
+{
+	document.getElementById('loading').style.visibility = "visible";
+	if(url.indexOf('?') != -1)
+		url += '&ajax=1';
+	else
+		url += '?ajax=1';
+	document.getElementById('title').innerHTML = '<span class="in">'+title+'</span>';
+	http.open('GET', url, true);
+	http.onreadystatechange = ajax_output;
+	http.send(null);
+	
+	if(navigation_direction == 'forward')
+	{
+		navigation[navigation_i]=new Array();
+		navigation[navigation_i]['name'] = title;
+		navigation[navigation_i]['url'] = url ;
+		navigation_i++;
+	}
+	navigation_direction = 'forward'; //just reset this
+}
+
+function ajax_output()
+{
+	
+	if(http.readyState == 4)
+	{
+		var results = eval('(' + http.responseText + ')');
+		//var info = results.info;
+		//var productions = results.products;
+		if(results.ajax_call)
+			ajax_call(results.ajax_call);
+		else if(results.element_id && results.body)
+			document.getElementById(results.element_id).innerHTML = results.body;
+		else if(results.body)
+			document.getElementById('body').innerHTML = results.body;
+		else if(results.page_reload)
+			page_reload();
+		else if(results.go_back)
+			go_back();
+			
+			
+		document.getElementById('loading').style.visibility = "hidden";
+	}
+}
+
+
+function go_back()
+{
+	navigation_direction = 'back';
+	navigation_i-=2;
+	if(navigation_i < 0)
+		navigation_i=0;
+	
+	ajax_call(navigation[navigation_i]["url"], navigation[navigation_i]['name']);
+	navigation_i++;
+}
+function page_reload()
+{
+	navigation_i--;
+	ajax_call(navigation[navigation_i]["url"], navigation[navigation_i]['name']);
+	setTimeout('page_reload()', 300000);
+}
+
+//--- Config
+function edit_config(id, name, value)
+{
+	
+	if(id == 'newid')
+	{
+		//add a new row
+		tbl = document.getElementById('mytable');
+		row = tbl.insertRow(tbl.rows.length);
+		row.insertCell(0);
+		row.insertCell(1);
+		row.insertCell(2);
+		row.insertCell(3);
+		
+	}
+	else
+	{
+		row = document.getElementById('row_'+id);
+	}
+	
+	row.cells[1].innerHTML = '<input type="hidden" name="id_'+id+'" value="' + id +'"><input type="text" name="name_'+id+'" value="' + name + '" >';
+	row.cells[2].innerHTML = '<input type="text" name="value_'+id+'" value="' + value + '">';
+	row.cells[3].innerHTML = '<input type="button" value="Save this config" onclick="save_config(\''+id+'\'); this.style.visibility=\'hidden\'"></form><a href="javascript:show_config_values(\''+id+'\', \''+name+'\', \''+value+'\')">Cancel</a>';
+	
+	document.forms['myform'].elements["name_" + id].focus();
+}
+function show_config_values(id, name,value)
+{
+	
+	if(id == 'newid')
+	{
+		var tbl = document.getElementById('mytable');
+  		var lastRow = tbl.rows.length;
+  		if (lastRow > 2) tbl.deleteRow(lastRow - 1);
+	}
+	else
+	{
+		document.getElementById('row_'+id).cells[1].innerHTML = name;
+		document.getElementById('row_'+id).cells[2].innerHTML = value;
+		document.getElementById('row_'+id).cells[3].innerHTML = '';
+	}
+}
+
+function save_config(id)
+{
+	var value_field = 'value_' + id;
+	var name_field = 'name_' + id;
+	var id_field = 'id_' + id;
+	
+	var myvalue = document.myform.elements[value_field].value;
+	var myname = document.myform.elements[name_field].value;
+	var myid = document.myform.elements[id_field].value;
+	
+	
+	
+	
+	var url = 'index.php?ajax=1&action=save_config&name=' + myname + '&value=' + myvalue + '&id=' + myid;
+	
+	http.open('GET', url, true);
+	http.onreadystatechange = save_config_cb;
+	http.send(null);
+	if(id != 'newid')
+	{
+		var row = document.getElementById('row_'+id);
+		row.cells[1].innerHTML = myname;
+		row.cells[2].innerHTML = myvalue;
+		row.cells[3].innerHTML = '';
+	}
+}
+function save_config_cb()
+{
+	if(http.readyState == 4)
+	{
+		var results = eval('(' + http.responseText + ')');
+		if(results.status == 'inserted')
+		{
+			//first delete the form row
+			var tbl = document.getElementById('mytable');
+	  		var lastRow = tbl.rows.length;
+	  		if (lastRow > 2) tbl.deleteRow(lastRow - 1);
+	  		
+	  		//now add a new row
+	  		row = tbl.insertRow(tbl.rows.length);
+	  		row.id = 'row_' + results.mid;
+	  		row.onmouseover = function() {document.getElementById('div_' + results.mid).style.visibility = 'visible'};
+	  		row.onmouseout = function() {document.getElementById('div_' + results.mid).style.visibility = 'hidden'};
+			var cell0 = row.insertCell(0);
+			cell0.innerHTML = "<div id=\"div_" + results.mid + "\" style=\"visibility: hidden\"><a href=\"javascript:edit_config('"+results.mid+"', '"+results.name+"', '"+results.value+"')\">Edit</a></div>";
+			cell1 = row.insertCell(1);
+			cell1.innerHTML = results.name;
+			cell2 = row.insertCell(2);
+			cell2.innerHTML = results.value;
+			row.insertCell(3);
+		}
+	}
+}
+//--- End Config
+
+//-- payout scirpts
+function mark_one_paid(query_string)
+{
+	ajax_call('payout.php?action=mark_one_paid&' + query_string, 'backend');
+	
+}
+function paid_confirm(qs, type, date, name)
+{
+	if(confirm("Are you sure you want to mark "+type+" payments for" + name + "until " + date + "?"))
+	{
+		mark_one_paid(qs);
+		
+	}
+}
+//---end payout
+
+
+//-- scale scripts
+function save_scales(id, form)
+{
+	form.id.value = id;
+	ajax_post('manage_scale.php', form);
+	form.id.value = '';
+}
+function cancel_save_scales(id)
+{
+	document.getElementById('static_scale_' + id).style.visibility = 'visible';
+	document.getElementById('static_scale_' + id).style.display = '';
+	document.getElementById('scale_' + id).style.visibility = 'hidden';
+	document.getElementById('scale_' + id).style.display = 'none';
+}
+function edit_scale(id)
+{
+	document.getElementById('static_scale_' + id).style.visibility = 'hidden';
+	document.getElementById('static_scale_' + id).style.display = 'none';
+	document.getElementById('scale_' + id).style.visibility = 'visible';
+	document.getElementById('scale_' + id).style.display = '';
+}
+function delete_scale(id, affiliate_id, program_id)
+{
+	ajax_call('manage_scale.php?action=delete_scale&id=' + id + '&affiliate_id=' + affiliate_id + '&program_id=' + program_id, '');
+	
+	
+}
+//--end scale scripts
+
+</script>
+
+
+{/literal}
+</head>
+
+<body>
+<table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><table width="639" border="0" align="center" cellpadding="0" cellspacing="0">
+      <tr>
+        <td colspan="5"><img src="../images/header.gif" width="478" height="91"><img src="../images/admincrown.gif" width="160" height="91"></td>
+      </tr>
+      <tr>
+        <td width="164" align="center" valign="top" >
+        <div id="loading" style="visibility: hidden"><img src="../images/loading.gif"></div>
+        <p><a href="javascript:ajax_call('manage_scale.php', 'Manage Scale')"><img src="../images/managescale.gif" alt="Manage Scale" width="162" height="33" border="0"></a>
+        <a href="javascript:ajax_call('manage_sites.php', 'Manage Sites')"><img src="../images/managesites.gif" alt="Manage Sites" width="162" height="28" border="0"></a>
+        <a href="javascript:ajax_call('payout.php', 'Payout')"><img src="../images/payoutreport.gif" alt="Payout Report" width="162" height="28" border="0"></a>
+        <a href="javascript:ajax_call('stats.php', 'Stats')"><img src="../images/statistics.gif" alt="Statistics" width="162" height="28" border="0"></a>
+        <a href="javascript:ajax_call('stats_by_affiliate.php', 'Stats by Affiliate')"><img src="../images/statsbyaffiliate.gif" alt="Statistic by Affiliate" width="162" height="28" border="0"></a>
+        <a href="javascript:ajax_call('manage_affiliates.php', 'Manage Affiliates')"><img src="../images/manageaffiliates.gif" alt="Manage Affiliates" width="162" height="28" border="0"></a>
+	        <a href="javascript:ajax_call('manage_config.php', 'Manage Config')"><img src="../images/configuration.gif" alt="Configuration" width="162" height="28" border="0"></a><br>
+<a href="/admin/fhg_admin/" target=_new>FGH Admin</a><br>
+<a href="javascript:ajax_call('affiliate_email.php', 'Mail Affiliates')">Affiliate Email</a>
+<img src="../images/lefthorizbar.gif" width="162" height="1">
+		
+
+		</p>
           </td>
-
-		 </tr>
-
-		 </table>
-		 
-		 
-		 <p><br></p></td></tr></table>
+        <td width="1" rowspan="3" nowrap background="../images/verticalbarbg.gif"></td>
+        <td width="333" rowspan="3" align="center" valign="top" ><p><div id="title"></div></p>
+          <p><span class="admincontenttext"><div id="body"> Admin Area</div></span><br>
+          </p></td>
+        <td width="1" rowspan="3" nowrap background="../images/verticalbarbg.gif"></td>
+        <td width="142" rowspan="3" valign="top" nowrap>&nbsp;</td>
+      </tr>
+      <tr>
+        <td align="center" valign="top" nowrap>&nbsp;</td>
+      </tr>
+      <tr>
+        <td height="325" align="right" valign="top" nowrap>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td valign="bottom"><div align="center"><FONT face=Arial,Helvetica,sans-serif color=white size=1><br>
+      Copyright © 2001 - 2004 0x7A69 Technologies. All Rights Reserved. </FONT></div></td>
+  </tr>
+</table>
+</body>
+</html>

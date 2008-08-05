@@ -663,6 +663,7 @@ return false;
 		$hit->setDatetime(date("Y-m-d H:i:s"));
 		$hit->setIpAddress($_SERVER['REMOTE_ADDR']);
 		$hit->setSiteId($_REQUEST['sid']);
+		$hit->setSubId(@$_REQUEST['sub_id']);
 		@$program_id=$_REQUEST['program_id'];
 		if(!$program_id)
 			$program_id=1;
@@ -784,14 +785,19 @@ fclose($fp );
   		$sale->setSiteId($hit->getSiteId());
   		$sale->setMemberId($mem_id);
   		$sale->setScaleId($scale->getId());
-  		$sale->setAffiliatePayout($scale->getPricepersignup());
+		$affpayout =0;
+		if($scale->getPricepersignup() > 0 )
+			$affpayout = $scale->getPricepersignup();
+		else if($scale->getRevsharepercent() > 0)
+			$affpayout = sprintf("%.2d", $_REQUEST['amount']*($scale->getRevsharepercent()/100));
+  		$sale->setAffiliatePayout($affpayout);
   		$sale->setNotes($notes);
   		
 		if($id)
 		{
 			$res = $this->db->query("update Stats set signups=signups+1,income=income+!,scale_id=! where id=?", array( $scale->getPricepersignup(), $scale->getId(), $id));	
 			
-				print_r($this->db);
+				//print_r($this->db);
 		}	
 		else
 		{

@@ -35,6 +35,7 @@ class Affiliate extends PEAR
 	*@var string
 	*/
 	var $status;
+	var $rating;
 
 	/**
 	*determines weather this record was changed with the set accessor methods
@@ -126,6 +127,14 @@ class Affiliate extends PEAR
 			$this->status = $status;
 		}
 	}
+	function setRating($rating)
+	{
+		if($this->rating != $rating)
+		{
+			$this->_modified = true;
+			$this->rating = $rating;
+		}
+	}
 	/**
 	* Acessor function to get the id variable
 	*
@@ -166,6 +175,10 @@ class Affiliate extends PEAR
 	{
 		return $this->status;
 	}
+	function getRating()
+	{
+		return $this->rating;
+	}
 	/**
 	*this function will update or insert into the database as needed
 	*
@@ -178,8 +191,8 @@ class Affiliate extends PEAR
 		if($this->_record_exists)
 		{
 			//update
-			$query = "update Affiliate set webmaster_id=?,program_id=?,status=? where id=?";
-			$valueArray = array($this->getWebmasterId(),$this->getProgramId(),$this->getStatus(), $this->getId());
+			$query = "update Affiliate set webmaster_id=?,program_id=?,status=?,rating=? where id=?";
+			$valueArray = array($this->getWebmasterId(),$this->getProgramId(),$this->getStatus(),$this->getRating(), $this->getId());
 		}
 		else
 		{
@@ -187,8 +200,8 @@ class Affiliate extends PEAR
 			if($this->getId() == '')
 				$this->setId($this->_generateNextId());
 
-			$query = "insert into Affiliate (id,webmaster_id,program_id,status) values (?,?,?,?)";
-			$valueArray = array($this->getId(),$this->getWebmasterId(),$this->getProgramId(),$this->getStatus());
+			$query = "insert into Affiliate (id,webmaster_id,program_id,status,rating) values (?,?,?,?,?)";
+			$valueArray = array($this->getId(),$this->getWebmasterId(),$this->getProgramId(),$this->getStatus(),$this->getRating());
 		}
 		$sth = $this->db->prepare($query);
 		$res = $this->db->execute($sth, $valueArray);
@@ -221,6 +234,7 @@ class Affiliate extends PEAR
 		$this->setWebmasterId($row['webmaster_id']);
 		$this->setProgramId($row['program_id']);
 		$this->setStatus($row['status']);
+		$this->setRating($row['rating']);
 		$this->_record_exists = true;
 		$this->_modified = false;
 	}
@@ -247,4 +261,3 @@ class Affiliate extends PEAR
 	}
 }
 
-?>

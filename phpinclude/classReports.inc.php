@@ -82,8 +82,8 @@ class Reports extends PEAR
 	*/
 	function _Reports()
 	{
-		if($this->_modified)
-		$this->_update();
+		//if($this->_modified)
+		//$this->_update();
 	}
 	/**
 	* Acessor function to set the id variable
@@ -260,6 +260,22 @@ class Reports extends PEAR
 		
 		$return['ratio'] = $this->getRatio($return['uniques'], $return['signups']);
 		return $return;
+		
+	}
+		/**
+	 * generate a subid report from the subid_stats table
+	 * @return array
+	 *
+	 */
+	function generateSubidStats()
+	{
+		$res = $this->db->query("select date, sub_id, hits, uniques, second_hits, signups from subid_stats where date >= ? and date <= ? and affiliate_id=?", array($this->getBeginDate(), $this->getEndDate(), $this->getAffiliateId()));
+		$ret = array();
+		while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
+		{
+			$ret[]=$row;
+		}
+		return $ret;
 		
 	}
 	/**

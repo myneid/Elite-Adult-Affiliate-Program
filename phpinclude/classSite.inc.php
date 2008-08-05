@@ -374,7 +374,7 @@ class Site extends PEAR
 			$t->_record_exists = true;
 			$t->_modified = false;
 
-			array_push($return, $t);
+			array_push($return, clone($t));
 		}
 
 		return $return;

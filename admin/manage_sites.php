@@ -1,4 +1,5 @@
 <?php
+//ini_set("display_errors", "on");
 //site admin, administrate the sites
 require_once('../phpinclude/classSite.inc.php');
 require_once('../phpinclude/classSmartyEC.inc.php');
@@ -34,11 +35,13 @@ function add_site_page()
 	{
 		$site->getById($_REQUEST['id']);
 	}
-
+	$output = array();
 	$smarty = new SmartyEC('../templates');
+	$smarty->clear_all_cache();
 	$smarty->assign('site', $site);
 	$smarty->assign('statuss', array('active','innactive','disabled','deleted') );
-	$smarty->display('admin/manage_sites_add.html');
+	$output['body'] = $smarty->fetch('admin/manage_sites_add.html');
+	_ajax_output($output);
 }
 function delete_site()
 {
@@ -80,17 +83,28 @@ function list_sites()
   membersurl varchar(128),
   joinurl varchar(128)
   */
+	$output = array();
 	$smarty = new SmartyEC('../templates');
-	$smarty->clear_all_cache();
 	$smarty->assign('sites', $sites);
-	$smarty->display('admin/manage_sites_list.html');
-
+	$output['body']=$smarty->fetch('admin/manage_sites_list.html');
+	
+	_ajax_output($output);
 
 
 }
 function forward_to_main_page()
 {
-	print "<script language=javascript>location.href='?'</script>";
-	print "<a href='?'>Continue</a>";
+	//print "<script language=javascript>location.href='?'</script>";
+	//print "<a href='?'>Continue</a>";
+	$output = array();
+	$output['ajax_call'] = 'manage_sites.php';
+	_ajax_output($output);
 }
 
+function _ajax_output($output)
+{
+	require_once('../phpinclude/JSON.php');
+        $json = new Services_JSON();
+        $output = $json->encode($output);
+        print $output;
+}

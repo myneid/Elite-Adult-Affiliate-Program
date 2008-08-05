@@ -65,6 +65,11 @@ class Hit extends PEAR
 	*@var int
 	*/
 	var $program_id;
+	/**
+	 * sub_id
+	 * @var string
+	 */
+	var $sub_id;
 
 	/**
 	*determines weather this record was changed with the set accessor methods
@@ -236,6 +241,21 @@ class Hit extends PEAR
 		}
 	}
 	/**
+	* Acessor function to set the sub_id variable
+	*
+	*@param mixed
+	*@access public
+	*/
+	function setSubId($sub_id)
+	{
+		if($sub_id != $this->sub_id)
+		{
+			$this->_modified = true;
+			$this->sub_id = $sub_id;
+	
+		}
+	}
+	/**
 	* Acessor function to get the id variable
 	*
 	*@access public
@@ -336,6 +356,16 @@ class Hit extends PEAR
 		return $this->program_id;
 	}
 	/**
+	* Acessor function to get the sub_id variable
+	*
+	*@access public
+	*@return mixed
+	*/
+	function getSubId()
+	{
+		return $this->sub_id;
+	}
+	/**
 	*this function will update or insert into the database as needed
 	*
 	*@access private
@@ -348,8 +378,8 @@ class Hit extends PEAR
 		if($this->_record_exists)
 		{
 			//update
-			$query = "update Hit set datetime=?,affiliate_id=?,hit_type=?,ipaddress=?,browser=?,referring_url=?,site_id=?,uniq=?,program_id=? where id=?";
-			$valueArray = array($this->getDateTime(),$this->getAffiliateId(),$this->getHitType(),$this->getIpaddress(),$this->getBrowser(),$this->getReferringURL(),$this->getSiteId(),$this->getUnique(),$this->getProgramID(), $this->getId());
+			$query = "update Hit set datetime=?,affiliate_id=?,hit_type=?,ipaddress=?,browser=?,referring_url=?,site_id=?,uniq=?,program_id=?,sub_id=? where id=?";
+			$valueArray = array($this->getDateTime(),$this->getAffiliateId(),$this->getHitType(),$this->getIpaddress(),$this->getBrowser(),$this->getReferringURL(),$this->getSiteId(),$this->getUnique(),$this->getProgramID(), $this->getSubid(), $this->getId());
 		}
 		else
 		{
@@ -357,8 +387,8 @@ class Hit extends PEAR
 			if($this->getId() == '')
 				$this->setId($this->_generateNextId());
 
-			$query = "insert into Hit (id,datetime,affiliate_id,hit_type,ipaddress,browser,referring_url,site_id,uniq,program_id) values (?,?,?,?,?,?,?,?,?,?)";
-			$valueArray = array($this->getId(),$this->getDateTime(),$this->getAffiliateId(),$this->getHitType(),$this->getIpaddress(),$this->getBrowser(),$this->getReferringURL(),$this->getSiteId(),$this->getUnique(),$this->getProgramID());
+			$query = "insert into Hit (id,datetime,affiliate_id,hit_type,ipaddress,browser,referring_url,site_id,uniq,program_id, sub_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+			$valueArray = array($this->getId(),$this->getDateTime(),$this->getAffiliateId(),$this->getHitType(),$this->getIpaddress(),$this->getBrowser(),$this->getReferringURL(),$this->getSiteId(),$this->getUnique(),$this->getProgramID(),$this->getSubId());
 		}
 		$sth = $this->db->prepare($query);
 		$res = $this->db->execute($sth, $valueArray);
@@ -398,6 +428,7 @@ class Hit extends PEAR
 		$this->setSiteId($row['site_id']);
 		$this->setUnique($row['uniq']);
 		$this->setProgramId($row['program_id']);
+		$this->setSubId($row['sub_id']);
 		$this->_record_exists = true;
 		$this->_modified = false;
 	}
@@ -437,7 +468,7 @@ class Hit extends PEAR
 	*/
 	function getTotalBySite($begin_date, $end_date, $affiliate_id='')
 	{
-		$query = "select site_id, count(*) from Hit where datetime >= ? and datetime <= ?";
+		$query = "select site_id, hit_type, count(*) from Hit where datetime >= ? and datetime <= ?";
 		$valueArray = array("$begin_date 0:0:0", "$end_date 23:59:59");
 		if($affiliate_id)
 		{
@@ -447,12 +478,15 @@ class Hit extends PEAR
 		
 		
 		
-		$res = $this->db->query("$query group by site_id", $valueArray);
+		$res = $this->db->query("$query group by site_id, hit_type", $valueArray);
 		if(DB::isError($res))
 			print_r($res);
 		$return = array();
-		while(list($siteid, $count) = $res->fetchRow())
+		while(list($siteid, $type, $count) = $res->fetchRow())
 		{
+			if($type == 'second')
+			$return[$siteid]['second_hits'] = $count;
+			else
 			$return[$siteid]['hits'] = $count;
 		}
 		$res = $this->db->query("$query and uniq=1 group by site_id", $valueArray);
@@ -497,4 +531,4 @@ class Hit extends PEAR
 	}
 }
 
-?>
+

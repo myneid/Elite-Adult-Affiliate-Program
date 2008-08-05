@@ -6,11 +6,11 @@
 //it will get that referrer webmasters info
 //and apply the percentage and add the affilaite incom * percentage to the referral income for the referrer webmaster
 
-require_once('/usr/local/apache/htdocs/hollywoodtraffic.com/phpinclude/classAffiliate.inc.php');
-require_once('/usr/local/apache/htdocs/hollywoodtraffic.com/phpinclude/classWebmaster.inc.php');
-require_once('/usr/local/apache/htdocs/hollywoodtraffic.com/phpinclude/classStats.inc.php');
-require_once('/usr/local/apache/htdocs/hollywoodtraffic.com/phpinclude/classAffiliate.inc.php');
-require_once('/usr/local/apache/htdocs/hollywoodtraffic.com/phpinclude/classAPConfig.inc.php');
+require_once('/web/pinkpays.com/phpinclude/classAffiliate.inc.php');
+require_once('/web/pinkpays.com/phpinclude/classWebmaster.inc.php');
+require_once('/web/pinkpays.com/phpinclude/classStats.inc.php');
+require_once('/web/pinkpays.com/phpinclude/classAffiliate.inc.php');
+require_once('/web/pinkpays.com/phpinclude/classAPConfig.inc.php');
 
 $db = new AffiliateProgramDB();
 $db->connect_to_db();
@@ -36,6 +36,7 @@ while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
 	$w2 = new Webmaster($db);
 	$w2->getById($webmaster->getReferredWebmasterId());
 	$ref_percent = $w2->getReferralPercent();
+	$ref_amount = $w2->getReferralAmount();
 	
 	$affiliate_ids = $w2->getAffiliateIDS();
 	$affiliate_id = $affiliate_ids[0]; //just get the first affiliate id in the list to attribute it to
@@ -46,8 +47,14 @@ while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
 		$conf_vars = $conf->get_all_vars();	
 		$ref_percent = $conf_vars['referral_percent'];
 	}
-	
-	$amount = $row['income'] * ($ref_percent/100);
+	if($ref_amount)
+	{
+		$amount = $ref_amount;
+	}
+	else
+	{
+		$amount = $row['income'] * ($ref_percent/100);
+	}
 	//gotta check if this is a bonus or not
 	if($total_signups == 0)
 	{

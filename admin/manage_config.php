@@ -41,8 +41,8 @@ function edit_page()
 	$smarty->assign('id', $config->getId());
 	$smarty->assign('value', $config->getValue());
 	$smarty->assign('description', $config->getDescription());
-	$smarty->display('admin/manage_config_edit.html');	
-	
+	$output['body']=$smarty->fetch('admin/manage_config_edit.html');	
+	_ajax_output($output);
 }
 function edit()
 {
@@ -69,11 +69,27 @@ function list_config()
 	$smarty = new SmartyEC("../templates");
 	$smarty->clear_all_cache();
 	$smarty->assign('configvars', $configvars);
-	$smarty->display('admin/manage_config_list.html');
+	$output['body']=$smarty->fetch('admin/manage_config_list.html');
+	_ajax_output($output);
 }
-function forward_to_main_page()
+function _forward_to_main_page()
 {
 	print "<script language=javascript>location.href='?'</script>";
 	print "<a href='?'>Continue</a>";	
 }
-?>
+function forward_to_main_page()
+{
+	//print "<script language=javascript>location.href='?'</script>";
+	//print "<a href='?'>Continue</a>";
+	$output = array();
+	$output['ajax_call'] = 'manage_config.php';
+	_ajax_output($output);
+}
+
+function _ajax_output($output)
+{
+	require_once('../phpinclude/JSON.php');
+        $json = new Services_JSON();
+        $output = $json->encode($output);
+        print $output;
+}

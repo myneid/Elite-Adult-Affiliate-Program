@@ -2,7 +2,9 @@
 //administrate the scales
 //for now lets just do the default one
 error_reporting(E_ALL);
+ini_set('display_errors',1);
 require_once('../phpinclude/classScale.inc.php');
+require_once('../phpinclude/classProgram.inc.php');
 require_once('../phpinclude/classSmartyEC.inc.php');
 main();
 
@@ -27,12 +29,43 @@ function main()
 			save_all($affiliate_id, $program_id);
 			forward_to_main_page();
 			break;
+		case 'ajax_list_scales':
+			ajax_list_scales($affiliate_id, $program_id);
+			break;
+		case 'delete_scale':
+			delete_scale($_REQUEST['id']);
+			ajax_list_scales($affiliate_id, $program_id);
+			break;
+		case 'save_scale':
+			save_scale($affiliate_id, $program_id);
+			ajax_list_scales($affiliate_id, $program_id);
+			break;
 		case '':
 		case 'list_scales':
 		default:
 			list_scales($affiliate_id, $program_id);
 			break;
 	}
+}
+function save_scale($affliate_id, $program_id=1)
+{
+	
+	$val = $_REQUEST['id'];
+	$scale =& new Scale();
+	if($val != 'new')
+		$scale->getById($val);
+	else 
+		$scale->setAffiliateId($affliate_id);
+	$scale->setProgramId($program_id);
+	$scale->setPercentage($_REQUEST['percentage' . "_$val"]);
+	$scale->setSignups($_REQUEST['signups' . "_$val"]);
+	$scale->setRevsharepercent($_REQUEST['revsharepercent' . "_$val"]);
+	$scale->setPriceperhit($_REQUEST['priceperhit' . "_$val"]);
+	$scale->setPricePersignup($_REQUEST['pricepersignup' . "_$val"]);
+	$scale->setPricereducedpercancel($_REQUEST['pricereducedpercancel' . "_$val"]);
+	$scale->setPricereducedperchargeback($_REQUEST['pricereducedperchargeback' . "_$val"]);
+	$scale->_update();
+	
 }
 function save_all($affiliate_id, $program_id=1)
 {
@@ -41,10 +74,12 @@ function save_all($affiliate_id, $program_id=1)
 		if(preg_match("/id_(.*?)/", $key, $matches))
 		{
 			$scale =& new Scale();
+			
 			$scale->getById($val);
 			$scale->setProgramId($program_id);
 			$scale->setPercentage($_REQUEST['percentage' . "_$val"]);
 			$scale->setSignups($_REQUEST['signups' . "_$val"]);
+			$scale->setRevsharepercent($_REQUEST['revsharepercent' . "_$val"]);
 			$scale->setPriceperhit($_REQUEST['priceperhit' . "_$val"]);
 			$scale->setPricePersignup($_REQUEST['pricepersignup' . "_$val"]);
 			$scale->setPricereducedpercancel($_REQUEST['pricereducedpercancel' . "_$val"]);
@@ -59,6 +94,7 @@ function add_scale($affiliate_id, $program_id=1)
 	$scale->setProgramId($program_id);
 	$scale->setPercentage($_REQUEST['percentage']);
 	$scale->setSignups($_REQUEST['signups']);
+	$scale->setRevsharepercent($_REQUEST['revsharepercent']);
 	$scale->setPriceperhit($_REQUEST['priceperhit']);
 	$scale->setPricePersignup($_REQUEST['pricepersignup']);
 	$scale->setPricereducedpercancel($_REQUEST['pricereducedpercancel']);
@@ -66,9 +102,39 @@ function add_scale($affiliate_id, $program_id=1)
 }
 function list_scales($affiliate_id, $program_id=1)
 {
+	
 	$scale = new Scale();
 	$scales = $scale->getAllByAffiliateId($affiliate_id, $program_id);
-print "scales for $affiliate_id, $program_id";
+//print "scales for $affiliate_id, $program_id";
+	$smarty = new SmartyEC('../templates');
+	$smarty->clear_all_cache();
+	$smarty->assign('scales', $scales);
+	$smarty->assign('affiliate_id', $affiliate_id);
+	$smarty->assign('program_id', $program_id);
+	$program = new Program();
+	$programs = $program->getNames();
+	//$smarty->assign('program_ids', array(1, 2, 3));
+	//$smarty->assign('program_names', array('Default', 'No Console', 'Cross Sale'));
+	$smarty->assign('program_ids', array_keys($programs));
+	$smarty->assign('program_names', array_values($programs));
+	$html = $smarty->fetch('admin/manage_scale.html');
+	$output = array();
+	$output['body'] = $html;
+	
+	_ajax_output($output);
+}
+function delete_scale($id)
+{
+	$db = new AffiliateProgramDB();
+	$db->connect_to_db();
+	
+	$db->query('delete from Scale where id=?', array($id));
+}
+function ajax_list_scales($affiliate_id, $program_id=1)
+{
+	$ret = array();
+	$scale = new Scale();
+	$scales = $scale->getAllByAffiliateId($affiliate_id, $program_id);
 	$smarty = new SmartyEC('../templates');
 	$smarty->clear_all_cache();
 	$smarty->assign('scales', $scales);
@@ -76,7 +142,13 @@ print "scales for $affiliate_id, $program_id";
 	$smarty->assign('program_id', $program_id);
 	$smarty->assign('program_ids', array(1, 2, 3));
 	$smarty->assign('program_names', array('Default', 'No Console', 'Cross Sale'));
-	$smarty->display('admin/manage_scale.html');
+	$html = $smarty->fetch('admin/ajax_list_scales.html');
+	$output = array();
+	$output['body'] = $html;
+	$output['element_id'] = 'scales';
+	
+	_ajax_output($output);
+	
 }
 function _list_scales($affiliate_id, $program_id=1)
 {
@@ -136,6 +208,18 @@ function _list_scales($affiliate_id, $program_id=1)
 function forward_to_main_page()
 {
 	//print "<script language=javascript>location.href='?'</script>";
-	print "<a href='?'>Continue</a>";
+
+	//print "<a href='?'>Continue</a>";
+	$output = array();
+	$output['ajax_call'] = 'manage_scale.php';
+	_ajax_output($output);
+
 }
-?>
+
+function _ajax_output($output)
+{
+	require_once('../phpinclude/JSON.php');
+        $json = new Services_JSON();
+        $output = $json->encode($output);
+        print $output;
+}

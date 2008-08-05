@@ -37,7 +37,7 @@ class AffiliateProgramDB
 	*
 	*@var string
 	*/
-	var $hostname    = '10.2.2.1'; 
+	var $hostname    = 'localhost'; 
 	/**
 	* teh hostname of the slave mysql server
 	*
@@ -53,12 +53,12 @@ class AffiliateProgramDB
 	* mysql username
 	*@var string
 	*/
-	var $username     = 'username';
+	var $username     = 'affiliateprogram';
 	/**
 	* mysql passowrd
 	*@var string
 	*/
-	var $password    = 'password';
+	var $password    = 'affiliateprogram';
 	/**
 	* the db type, used for the pear db object. 'mysql' for mysql, 'oracle' for oracle (i think, it might be oci8)
 	*@var string
@@ -68,7 +68,7 @@ class AffiliateProgramDB
 	* the database name
 	*@var string
 	*/
-	var $dbname        = 'AffiliateProgram';
+	var $dbname        = 'affiliateprogram_0x7a69';
 	/**
 	* if you have a master/slave setup, set this value to true, otherwise leave it at false
 	*@var bool
@@ -87,6 +87,9 @@ class AffiliateProgramDB
 	function AffiliateProgramDB($access = 'rw')
 	{
 		$this->access = $access;
+		//since affiliate programdb is included everywhere, lets check the version and include php4.inc.php if we are using php4
+		if(phpversion() < 5)
+			require_once('php4.inc.php');
 	}
 	function connect_to_db($access = 'rw')
 	{

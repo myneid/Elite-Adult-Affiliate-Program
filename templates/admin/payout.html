@@ -1,50 +1,60 @@
 <link href="../affiliates.css" rel="stylesheet" type="text/css">
-<div align="center"><p><img src="../images/headertemplate.gif" width="463" height="74"><br>
-            <br>
-          <img src="../images/longhorizline.gif" width="637" height="1"></p>
-          </div>
 
-<table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td align="center" valign="top"><table width="639" border="0" align="center" cellpadding="0" cellspacing="0">
-      <tr align="center">
-        <td colspan="3">&nbsp;</td>
-      </tr>
+
+
       <div align="center">
         <h3 align="center">Payout Submit for date ending {$end_date} <br>
 Print this for your records of paying out before you click on the submit payout button <br>
 </h3>
-        <form method=post>
+<form action="javascript:ajax_post('payout.php', document.forms['statsdate'])" name = "statsdate">
+  <table width="600" border="0" align="center">
+    <tr>
+      <td align="center">
+        <br>
+        <b><font face="Arial, Helvetica, sans-serif" size="2">Stats by Range<br>
+        </font></b>
+        {html_select_date prefix="start" time=$start_date start_year=2005}
+        to
+                {html_select_date prefix="end" time=$end_date start_year=2005}
+        <br>
+        <input type="submit" name="Submit22" value="View Stats">
+                <input type="hidden" name="t" value="{$t}">
+      </td>
+    </tr>
+  </table>
+</form>
+        <form method=post action="javascript:ajax_post('payout.php', document.forms['payoutsubmit'])" name="payoutsubmit">
           <div align="center">
             <input type=hidden name=action value=payout_submit>
             <input type=hidden name=end_date value="{$end_date}">
+            <input type=hidden name=start_date value="{$start_date}">
             <table border=1 cellpadding="0" cellspacing="0" bordercolor="#000000">
               <tr bgcolor="#333333" class="header">
                 <th>Affiliate id</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Pay To</th>
+                <th>Info</th>
+                
                 <th>Payout Method</th>
-                <th>StreetAddress</th>
-                <th>City</th>
-                <th>State</th>
-                <th>postal code</th>
-                <th>country</th>
-                <th>Income</th>
+                
+                <th>Period Income</th>
+                <th>Rollover Income</th>
+                <th>Total Income</th>
               </tr>
       {foreach key=p item=payout from=$payouts}
       <tr bgcolor="#999999">
         <td>{$payout.affiliate_id}</td>
-        <td>{$payout.firstname}</td>
-        <td>{$payout.lastname}</td>
-        <td>{$payout.pay_to}</td>
+        
+        <td>{$payout.pay_to}<br>
+        C/O {$payout.firstname} {$payout.lastname}<br>
+        {$payout.street_address}<br>
+        {$payout.city}, {$payout.state}  {$payout.postal_code}<br>
+        {$payout.country}
+        
+        </td>
         <td>{$payout.payout_method}</td>
-        <td>{$payout.street_address}</td>
-        <td>{$payout.city}</td>
-        <td>{$payout.state}</td>
-        <td>{$payout.postal_code}</td>
-        <td>{$payout.country}</td>
-        <td>{$payout.income}</td>
+        
+        <td>${$payout.current_income}</td>
+        <td>${$payout.rollover_income}<br/><a href="javascript:paid_confirm('affiliate_id={$payout.affiliate_id}&end_date={$start_date}', 'Rollover', '{$start_date}', '{$payout.pay_to}')">Already Paid</a></td>
+        <td>${$payout.income}<br/><a href="javascript:paid_confirm('affiliate_id={$payout.affiliate_id}&end_date={$end_date}', 'All', '{$end_date}', '{$payout.pay_to}')">Already Paid</a></td>
       </tr>
       {/foreach}
             </table>
@@ -53,18 +63,14 @@ Print this for your records of paying out before you click on the submit payout 
           </div>
         </form>
         <br>
-        </div>
-      <tr><td colspan="3" align="center" valign="top" nowrap>&nbsp;</td>
-      </tr>
-    <tr>
-    <td valign="bottom"><div align="center"><FONT face=Arial,Helvetica,sans-serif color=white size=1><img src="../images/longhorizline.gif" width="637" height="1"><br>
-          <br>
-          <a href="../admin/manage_scale.php"><img src="../images/managescale.gif" alt="Manage Scale" width="162" height="35" border="0"></a><br>
-          <a href="../admin/manage_sites.php"><img src="../images/managesites.gif" alt="Manage Sites" width="162" height="28" border="0"></a><img src="../images/payoutreport02.gif" alt="Payout Report" width="162" height="28" border="0"><a href="../admin/stats.php">
-          <img src="../images/statistics.gif" alt="Statistics" width="162" height="28" border="0"><br>
-          </a><a href="../admin/stats_by_affiliate.php"><img src="../images/statsbyaffiliate.gif" alt="Statistic by Affiliate" width="162" height="28" border="0"></a><a href="../admin/manage_affiliates.php"><img src="../images/manageaffiliates.gif" alt="Manage Affiliates" width="162" height="28" border="0"></a><a href="../admin/manage_config.php"><img src="../images/configuration.gif" alt="Configuration" width="162" height="28" border="0"></a><br>
-<br>
-          <img src="../images/longhorizline.gif" width="637" height="1">      <br> 
-    &copy; Copyright 2001 - 2004 0x7A69 Technologies. All Rights Reserved. </FONT></div></td>
-  </tr>
 
+        <form method=post>
+        <input type=hidden name=action value=payout_iif>
+        <input type=hidden name=end_date value="{$end_date}">
+        <input type=hidden name=start_date value="{$start_date}">
+        <input type=submit value="Export to Quickbooks IIF">
+        </form>
+        <br>
+
+        </div>
+      

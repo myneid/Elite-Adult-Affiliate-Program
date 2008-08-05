@@ -66,6 +66,8 @@ class APConfig extends PEAR
 			$db = $mdb->connect_to_db();
 		}
 		$this->db = $db;			
+
+
 	}	
 	/**
 	* Destructor
@@ -262,7 +264,7 @@ class APConfig extends PEAR
 			$t->_record_exists = true;
 			$t->_modified = false;
 			
-			array_push($return, $t);
+			array_push($return, clone($t));
 		}
 		
 		return $return;

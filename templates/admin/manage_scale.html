@@ -1,82 +1,77 @@
 
-<link href="../affiliates.css" rel="stylesheet" type="text/css">
-<div align="center">
-<div align="center"><img src="../images/headertemplate.gif" width="463" height="74"><br>
-                  <br>
-    <img src="../images/longhorizline.gif" width="637" height="1"><br>
-</div>
 
 <h3 align="center">List Scales</h3>
-<form method=post>
-  <div align="center">Program
-    <input type=hidden name=action value='list_scales'>
-    <input type=hidden name=affiliate_id value='{$affiliate_id}'>
-    <select name='program_id'>
+
+
+	<div align="center">
+	  <form method="javascript:ajax_post('manage_scale.php', document.forms['savescales'])" name="savescales">
+	  <input type=hidden name=action value='save_scale'>
+	  <input type=hidden name=affiliate_id value='{$affiliate_id}'>
+	  <input type="hidden" name="id" value="">
+	  
+	<select name='program_id' onchange="ajax_call('manage_scale.php?action=ajax_list_scales&affiliate_id={$affiliate_id}&program_id=' + this.options[this.selectedIndex].value);">
       
 
 {html_options values=$program_ids selected=$program_id output=$program_names}
 
-    </select>
-    <input type=submit value='Change Scale'>
-  </div>
-</form>
-<div align="center"><br>
-</div>
-<form method=post>
-  <div align="center">
-    <input type=hidden name=action value='add_scale'>
-    <input type=hidden name=affiliate_id value='{$affiliate_id}'>
-    <input type=hidden name=program_id value='{$program_id}'>
-	  <font color="#FFFFCC">Add Scale</font><br>
-	  <br>
-	  <table border=1 cellpadding="0" cellspacing="0" bordercolor="#000000"  bgcolor=#666666>
-	  <tr><th bgcolor="#333333"><font color="#FFFFCC">Percentage</font></th>
-	  <th bgcolor="#333333"><font color="#FFFFCC">Signups</font></th>
-	  <th bgcolor="#333333"><font color="#FFFFCC">Price Per Hit</font></th>
-	  <th bgcolor="#333333"><font color="#FFFFCC">Price Per Signup</font></th>
-	  <th bgcolor="#333333"><font color="#FFFFCC">Price Reduced Per Cancel</font></th>
-	  <th bgcolor="#333333"><font color="#FFFFCC">Price Reduced Per Chargeback</font></th>
-	  </tr>
-	  <tr><td bgcolor=#999999><input type=text name=percentage></td><td bgcolor=#999999><input type=text name=signups></td><td bgcolor=#999999><input type=text name=priceperhit></td><td bgcolor=#999999><input type=text name=pricepersignup></td><td bgcolor=#999999><input type=text name=pricereducedpercancel></td><td bgcolor=#999999><input type=text name=pricereducedperchargeback></td></tr>
-      </table>
-      <br>
-    <input type=submit>
-  </div>
-</form>
-	<div align="center">
-	  <form method=post>
-	  <input type=hidden name=action value='save_all'>
-	  <input type=hidden name=affiliate_id value='{$affiliate_id}'>
-	  <input type=hidden name=program_id value='{$program_id}'>
-	Scale for <font color="#FFCC00">{$affiliate_id}</font>
-	<table border=1 cellpadding="0" cellspacing="0" bordercolor="#000000"  bgcolor=#666666>
+    </select> Scale for <font color="#FFCC00">{$affiliate_id}</font>
+	
+    <div id="scales">
+    <!-- guess i cant initiate js from ajax being set as document.innerHTML so i'll hard code ajax_list_scales.html right here too-->
+    <table border=1 cellpadding="0" cellspacing="0" bordercolor="#000000"  bgcolor=#666666>
 	<tr bgcolor="#333333"><th><font color="#FFFFCC">Percentage</font></th>
 	<th><font color="#FFFFCC">Signups</font></th>
 	<th><font color="#FFFFCC">Price Per Hit</font></th>
 	<th><font color="#FFFFCC">Price Per Signup</font></th>
 	<th><font color="#FFFFCC">Price Reduced Per Cancel</font></th>
 	<th><font color="#FFFFCC">Price Reduced Per Chargeback</font></th>
+	<th>Action</th>
 	</tr>
 	
 	{foreach item=s from=$scales}
 		<input type=hidden name=id_{$s->id} value={$s->id}>
-		<tr>
+		<tr id="static_scale_{$s->id}" style="visibility: visible;">
+		<td bgcolor=#999999>{$s->getPercentage()}</td>
+		<td bgcolor=#999999>{$s->getSignups()}</td>
+		<td bgcolor=#999999>{$s->getPricePerHit()}</td>
+		<td bgcolor=#999999>{$s->getPricepersignup()}</td>
+		<td bgcolor=#999999>{$s->getPricereducedpercancel()}</td>	
+		<td bgcolor=#999999>{$s->getPricereducedperchargeback()}</td>	
+		<td><a href="javascript:edit_scale('{$s->id}')">Edit</a></td>
+		</tr>
+		<tr id="scale_{$s->id}" style="visibility: hidden; display: none">
 		<td bgcolor=#999999><input type=text name=percentage_{$s->id} value='{$s->getPercentage()}'></td>
 		<td bgcolor=#999999><input type=text name=signups_{$s->id} value='{$s->getSignups()}'></td>
 		<td bgcolor=#999999><input type=text name=priceperhit_{$s->id} value='{$s->getPricePerHit()}'></td>
 		<td bgcolor=#999999><input type=text name=pricepersignup_{$s->id} value='{$s->getPricepersignup()}'></td>
 		<td bgcolor=#999999><input type=text name=pricereducedpercancel_{$s->id} value='{$s->getPricereducedpercancel()}'></td>	
 		<td bgcolor=#999999><input type=text name=pricereducedperchargeback_{$s->id} value='{$s->getPricereducedperchargeback()}'></td>	
+		<td><a href="javascript:save_scales('{$s->id}', document.forms['savescales'])">Save</a> | <a href="javascript:cancel_save_scales('{$s->id}')">Cancel</a> | <a href="javascript:if(confirm('You sure you want to delete?'))delete_scale('{$s->id}', '{$affiliate_id}', document.forms['savescales'].program_id.options[document.forms['savescales'].program_id.selectedIndex].value)">Delete</a></td>
 		</tr>
 	{/foreach}
+		<tr id="static_scale_new">
+		<td colspan="7"><a href="javascript:edit_scale('new')">Add New Scale</a></td>
+		</tr>
+		<tr id="scale_new" style="visibility: hidden;">
+		<td bgcolor=#999999><input type=text name=percentage_new ></td>
+		<td bgcolor=#999999><input type=text name=signups_new ></td>
+		<td bgcolor=#999999><input type=text name=priceperhit_new ></td>
+		<td bgcolor=#999999><input type=text name=pricepersignup_new ></td>
+		<td bgcolor=#999999><input type=text name=pricereducedpercancel_new ></td>	
+		<td bgcolor=#999999><input type=text name=pricereducedperchargeback_new ></td>	
+		<td><a href="javascript:save_scales('new', document.forms['savescales'])">Save</a> | <a href="javascript:cancel_save_scales('new')">Cancel</a> </td>
+		</tr>
     </table>
-	<br>
-	<input type=submit value='Save These Scales'>
+    
+    <!-- end ajax part -->
+    </div>
+    
+   
 	<br>
 	<Br>
 	<br>
 	<br>
-	<a name='description'>
+	<a name='description'></a>
 	ok, you can techncially pay out by conversion ratio or based on number of signups. currently the system is only set up to 
 	pay out on number of signups. so make sure that for percentage you always put a 0.
 	make sure you fill out every feidl as well.
@@ -86,19 +81,4 @@
 	then you would make a second entry and put 31 in the signups box and 25 in teh per signup box.<br>
 	then you would make another entry but put a large number like 999999999 for signups and put 35 in the pay per signup box. this means that signups 32 till 999999999 signups will pay 35 per signup
 	
-    <FONT face=Arial,Helvetica,sans-serif color=white size=1><br>
-    <br>
-    <img src="../images/longhorizline.gif" width="637" height="1"><br>
-          <br>
-          <a href="../admin/manage_scale.php"><img src="../images/managescale.gif" alt="Manage Scale" width="162" height="33" border="0"></a><br>
-          <a href="../admin/manage_sites.php"><img src="../images/managesites.gif" alt="Manage Sites" width="162" height="28" border="0"></a><a href="../admin/payout.php"><img src="../images/payoutreport.gif" alt="Payout Report" width="162" height="28" border="0"></a>
-          <img src="../images/statistics02.gif" alt="Statistics" width="162" height="28" border="0"><br>
-          <a href="../admin/stats_by_affiliate.php"><img src="../images/statsbyaffiliate.gif" alt="Statistic by Affiliate" width="162" height="28" border="0"></a><a href="../admin/manage_affiliates.php"><img src="../images/manageaffiliates.gif" alt="Manage Affiliates" width="162" height="28" border="0"></a><a href="../admin/manage_config.php"><img src="../images/configuration.gif" alt="Configuration" width="162" height="28" border="0"></a><br>
-    <br>
-          <img src="../images/longhorizline.gif" width="637" height="1">      <br>
-&copy; Copyright 2001 - 2004 0x7A69 Technologies. All Rights Reserved. </FONT>
-    
-    </td>
-
-
-    </div>
+  

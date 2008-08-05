@@ -231,6 +231,22 @@ class Program extends PEAR
 	{
 		return $this->db->nextId("Program", true);
 	}
+	/**
+	* return ana rray where key is site id and value is site name
+	*
+	*@access public
+	*@return mixed array
+	*/
+	function getNames()
+	{
+		$res = $this->db->query("select id, name from Program");
+		$return = array();
+		while(list($id,$name) = $res->fetchRow())
+		{
+			$return[$id] = $name;
+		}
+		return $return;
+	}
 }
 
 ?>

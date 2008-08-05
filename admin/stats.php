@@ -35,8 +35,8 @@ $smarty->assign(array(
 				);
 $smarty->assign('begin_date', $start_date);
 $smarty->assign('end_date', $end_date);
-$smarty->display('admin/stats.html');
-
+$output['body'] = $smarty->fetch('admin/stats.html');
+_ajax_output($output);
 
 
 function get_start_and_end_dates($db)
@@ -92,4 +92,19 @@ function get_start_and_end_dates($db)
 	}
 	return array($start_date, $end_date);
 }
-?>
+function forward_to_main_page()
+{
+	//print "<script language=javascript>location.href='?'</script>";
+	//print "<a href='?'>Continue</a>";
+	$output = array();
+	$output['ajax_call'] = 'stats.php';
+	_ajax_output($output);
+}
+
+function _ajax_output($output)
+{
+	require_once('../phpinclude/JSON.php');
+        $json = new Services_JSON();
+        $output = $json->encode($output);
+        print $output;
+}

@@ -41,6 +41,11 @@ class Scale extends PEAR
 	*/
 	var $signups;
 	/**
+	* revshare percent
+	*@var int
+	*/
+	var $revsharepercent;
+	/**
 	* description of priceperhit
 	*@var float
 	*/
@@ -174,6 +179,20 @@ class Scale extends PEAR
 		}
 	}
 	/**
+	* Acessor function to set the revsharepercent variable
+	*
+	*@param mixed
+	*@access public
+	*/
+	function setRevsharepercent($revsharepercent)
+	{
+		if($revsharepercent != $this->revsharepercent)
+		{
+			$this->_modified = true;
+			$this->revsharepercent = $revsharepercent;
+		}
+	}
+	/**
 	* Acessor function to set the priceperhit variable
 	*
 	*@param mixed
@@ -280,6 +299,16 @@ class Scale extends PEAR
 		return $this->signups;
 	}
 	/**
+	* Acessor function to get the revsharepercent variable
+	*
+	*@access public
+	*@return mixed
+	*/
+	function getRevsharepercent()
+	{
+		return $this->revsharepercent;
+	}
+	/**
 	* Acessor function to get the priceperhit variable
 	*
 	*@access public
@@ -331,8 +360,8 @@ class Scale extends PEAR
 		if($this->_record_exists)
 		{
 			//update
-			$query = "update Scale set affiliate_id=?,program_id=?,percentage=?,signups=?,priceperhit=?,pricepersignup=?,pricereducedpercancel=?,pricereducedperchargeback=? where id=?";
-			$valueArray = array($this->getAffiliateId(),$this->getProgramId(), $this->getPercentage(),$this->getSignups(),$this->getPriceperhit(),$this->getPricepersignup(),$this->getPricereducedpercancel(),$this->getPricereducedperchargeback(),$this->getId());
+			$query = "update Scale set affiliate_id=?,program_id=?,percentage=?,signups=?,revsharepercent=?,priceperhit=?,pricepersignup=?,pricereducedpercancel=?,pricereducedperchargeback=? where id=?";
+			$valueArray = array($this->getAffiliateId(),$this->getProgramId(), $this->getPercentage(),$this->getSignups(),$this->getRevsharepercent(),$this->getPriceperhit(),$this->getPricepersignup(),$this->getPricereducedpercancel(),$this->getPricereducedperchargeback(),$this->getId());
 		}
 		else
 		{
@@ -340,8 +369,8 @@ class Scale extends PEAR
 			if($this->getId() == '')
 				$this->setId($this->_generateNextId());
 
-			$query = "insert into Scale (id,affiliate_id,program_id,percentage,signups,priceperhit,pricepersignup,pricereducedpercancel,pricereducedperchargeback) values (?,?,?,?,?,?,?,?,?)";
-			$valueArray = array($this->getId(),$this->getAffiliateId(),$this->getProgramId(),$this->getPercentage(),$this->getSignups(),$this->getPriceperhit(),$this->getPricepersignup(),$this->getPricereducedpercancel(),$this->getPricereducedperchargeback());
+			$query = "insert into Scale (id,affiliate_id,program_id,percentage,signups,revsharepercent,priceperhit,pricepersignup,pricereducedpercancel,pricereducedperchargeback) values (?,?,?,?,?,?,?,?,?,?)";
+			$valueArray = array($this->getId(),$this->getAffiliateId(),$this->getProgramId(),$this->getPercentage(),$this->getSignups(),$this->getRevsharepercent(),$this->getPriceperhit(),$this->getPricepersignup(),$this->getPricereducedpercancel(),$this->getPricereducedperchargeback());
 		}
 		$sth = $this->db->prepare($query);
 		$res = $this->db->execute($sth, $valueArray);
@@ -375,6 +404,7 @@ class Scale extends PEAR
 		$this->setProgramID($row['program_id']);
 		$this->setPercentage($row['percentage']);
 		$this->setSignups($row['signups']);
+		$this->setRevsharepercent($row['revsharepercent']);
 		$this->setPriceperhit($row['priceperhit']);
 		$this->setPricepersignup($row['pricepersignup']);
 		$this->setPricereducedpercancel($row['pricereducedpercancel']);
@@ -408,13 +438,14 @@ class Scale extends PEAR
 			$t->setProgramID($row['program_id']);
 			$t->setPercentage($row['percentage']);
 			$t->setSignups($row['signups']);
+			$t->setRevsharepercent($row['revsharepercent']);
 			$t->setPriceperhit($row['priceperhit']);
 			$t->setPricepersignup($row['pricepersignup']);
 			$t->setPricereducedpercancel($row['pricereducedpercancel']);
 			$t->setPricereducedperchargeback($row['pricereducedperchargeback']);
 			$t->_record_exists = true;
 			$t->_modified = false;
-			array_push($return, $t);
+			array_push($return, clone($t));
 		}
 		return $return;
 	}
@@ -437,7 +468,7 @@ class Scale extends PEAR
 	*@access public
 	*@param mixed int affiliate id
 	*@param mixed int signups
-	*@param mixed hits
+	*@param mixed int hits
 	*/
 	function calculate($affiliate_id, $signups, $hits=0, $program_id=1)
 	{
@@ -461,6 +492,7 @@ class Scale extends PEAR
 			{
 				$by_signups_flag = true;
 				$by_signups[$row['signups']]['id'] = $row['id'];
+				$by_signups[$row['signups']]['revsharepercent'] = $row['revsharepercent'];
 				$by_signups[$row['signups']]['priceperhit'] = $row['priceperhit'];
 				$by_signups[$row['signups']]['pricepersignup'] = $row['pricepersignup'];
 				$by_signups[$row['signups']]['pricereducedpercancel'] = $row['pricereducedpercancel'];
@@ -469,6 +501,7 @@ class Scale extends PEAR
 			else
 			{
 				$by_ratio[$row['percentage']]['id'] = $row['id'];
+				$by_ratio[$row['percentage']]['revsharepercent'] = $row['revsharepercent'];
 				$by_ratio[$row['percentage']]['priceperhit'] = $row['priceperhit'];
 				$by_ratio[$row['percentage']]['pricepersignup'] = $row['pricepersignup'];
 				$by_ratio[$row['percentage']]['pricereducedpercancel'] = $row['pricereducedpercancel'];
@@ -478,6 +511,7 @@ class Scale extends PEAR
 		
 		//ok now we have two arrays with the ratios we are either gonna use by signpus or by ratio
 		//and choose the proper one
+		$revsharepercent=0;
 		$priceperhit =0;
 		$pricepersignups=0;
 		$pricereducedpercancel=0;
@@ -510,6 +544,7 @@ class Scale extends PEAR
 				if($curr_key >= $key)
 				{
 					$id = $val_ar['id'];	
+					$revsharepercent = $val_ar['revsharepercent'];	
 					$priceperhit = $val_ar['priceperhit'];	
 					$pricepersignup = $val_ar['pricepersignup'];
 					$pricereducedpercancel = $val_ar['pricereducedpercancel'];
@@ -521,6 +556,7 @@ class Scale extends PEAR
 		
 		//ok here our vars should be ready to be set
 		$this->id = $id;
+		$this->revsharepercent = $revsharepercent;
 		$this->priceperhit = $priceperhit;
 		$this->pricepersignup = $pricepersignup;
 		$this->pricereducedpercancel = $pricereducedpercancel;
@@ -530,4 +566,3 @@ class Scale extends PEAR
 	}
 }
 
-?>

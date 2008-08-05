@@ -1,16 +1,5 @@
-<link href="../affiliates.css" rel="stylesheet" type="text/css">
-<div align="center"><p><img src="../images/headertemplate.gif" width="463" height="74"><br>
-            <br>
-          <img src="../images/longhorizline.gif" width="637" height="1"></p>
-          </div>
 
-<table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td align="center" valign="top"><table width="639" border="0" align="center" cellpadding="0" cellspacing="0">
-      <tr><td>      <div align="center">
-        <h3>{include file="admin/header.html"} </h3>
-        <h3>List Sites</h3>
-        <a href='?action=add_site_page'>Add a new site</a><br>
+        <a href='javascript:ajax_call("manage_sites.php?action=add_site_page", "Add Site")'>Add a new site</a><br>
         <br>
         <table border=1 cellpadding="0" cellspacing="0" bordercolor="#000000">
           <tr bgcolor="#333333" class="header">
@@ -21,27 +10,10 @@
   {foreach item=s from=$sites}
   <tr bgcolor="#999999">
     <td>{$s->getId()}<br>
-        <font size=1>[ <a href='?action=add_site_page&id={$s->getId()}'>EDIT</A> ]</font></TD>
+        <font size=1>[ <a href='javascript:ajax_call("manage_sites.php?action=add_site_page&id={$s->getId()}", "Edit Site")'>EDIT</A> | <a href='javascript:ajax_call("manage_sites.php?action=delete_site&id={$s->getId()}", "Delete Site")' onclick="return confirm('are you sure you want to delete this site?')">DEL</A>]</font></TD>
     <td>{$s->getName()}</td>
     <td>{$s->getMainURL()}</td>
   </tr>
   {/foreach}
         </table>
-        {include file="admin/footer.html"}
-        <h3><br>
-        </h3>
-      </div>
-      <tr><td colspan="3" align="center" valign="top" nowrap>&nbsp;</td>
-      </tr>
-    <tr>
-    <td valign="bottom"><div align="center"><FONT face=Arial,Helvetica,sans-serif color=white size=1><img src="../images/longhorizline.gif" width="637" height="1"><br>
-          <br>
-          <img src="../images/managescale02.gif" alt="Manage Scale" width="162" height="35" border="0"><br>
-          <a href="../admin/manage_sites.php"><img src="../images/managesites.gif" alt="Manage Sites" width="162" height="28" border="0"></a><a href="../admin/payout.php"><img src="../images/payoutreport.gif" alt="Payout Report" width="162" height="28" border="0"></a><a href="../admin/stats.php">
-          <img src="../images/statistics.gif" alt="Statistics" width="162" height="28" border="0"><br>
-          </a><a href="../admin/stats_by_affiliate.php"><img src="../images/statsbyaffiliate.gif" alt="Statistic by Affiliate" width="162" height="28" border="0"></a><a href="../admin/manage_affiliates.php"><img src="../images/manageaffiliates.gif" alt="Manage Affiliates" width="162" height="28" border="0"></a><a href="../admin/manage_config.php"><img src="../images/configuration.gif" alt="Configuration" width="162" height="28" border="0"></a><br>
-<br>
-          <img src="../images/longhorizline.gif" width="637" height="1">      <br> 
-    &copy; Copyright 2001 - 2004 0x7A69 Technologies. All Rights Reserved. </FONT></div></td>
-  </tr>
-
+        
