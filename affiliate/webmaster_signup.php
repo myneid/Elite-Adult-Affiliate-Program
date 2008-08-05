@@ -5,7 +5,6 @@ require_once('../phpinclude/classAffiliateLogin.inc.php');
 require_once('../phpinclude/classAffiliate.inc.php');
 require_once('../phpinclude/classSmartyEC.inc.php');
 require_once('../phpinclude/classAPConfig.inc.php');
-//ini_set('display_errors', 'on');
 main();
 
 function main()
@@ -104,11 +103,14 @@ function add_webmaster()
 function show_join_page($vars)
 {
 	$smarty = new SmartyEC("../templates");
+	$smarty->clear_all_cache();
 	$smarty->assign($vars);
+$smarty->assign('test', 'test');
 	$smarty->assign('referred_webmaster_id', $_COOKIE['referred_webmaster_id']);
 	$smarty->display('header.html');
 	$smarty->display('webmaster_signup.html');	
-    $smarty->display('footer.html');
+	$smarty->display('footer.html');
+
 }
 /**
 * real simple for now
@@ -116,9 +118,10 @@ function show_join_page($vars)
 function validate_fields()
 {
 	$error = '';
+	$optional_fields = array('referred_webmaster_id', 'aim', 'icq', 'textfield');
 	foreach($_REQUEST as $key => $val)
 	{
-		if(!$val && $key != 'referred_webmaster_id')
+		if(!$val && !in_array($key, $optional_fields))
 		{
 			$error .= "$key is blank. ";	
 		}	
@@ -136,5 +139,6 @@ function show_success_page($vars)
 	$smarty->assign($vars);
 	$smarty->display('header.html');
 	$smarty->display('webmaster_signup_success.html');
+	$smarty->display('footer.html');
 }
 ?>
