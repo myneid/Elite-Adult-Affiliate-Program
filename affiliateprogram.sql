@@ -14,6 +14,7 @@ create table Webmaster (
   icq varchar(16),
   skype varchar(16),
   phone varchar(16),
+  referral_amount float(4,2),
   company varchar(64),
   pay_to varchar(64),
   minimum_payout float,
