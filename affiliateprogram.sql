@@ -12,6 +12,8 @@ create table Webmaster (
   referred_webmaster_id int,
   aim varchar(16),
   icq varchar(16),
+  skype varchar(16),
+  phone varchar(16),
   company varchar(64),
   pay_to varchar(64),
   minimum_payout float,
