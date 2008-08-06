@@ -67,6 +67,7 @@ create table Affiliate (
   webmaster_id int,
   program_id int,
   status enum('ACTIVE', 'DISABLED', 'DISABLED-SPAM'),
+  rating int,
   key webmaster_id (webmaster_id)
 ) type=myisam comment='each affiliate id for the webmasters';
 
