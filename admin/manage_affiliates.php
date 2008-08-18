@@ -57,12 +57,16 @@ function view_by_affid()
 }
 function do_aff_login()
 {
+	require_once('../phpinclude/classAPConfig.inc.php');
+	$config_obj = new APConfig();
+	$config = $config_obj->get_all_vars();
+	
 	@session_start();
 	$affSession = new AffiliateLogin( false, false );
 	$affSession->getByAffiliateID( $_REQUEST['affid'] );
 	$q = "update AffiliateLogin set session_id=NULL where session_id=?";
 	$affSession->db->query( $q, array( session_id() ));
-	header( "Location: http://freelifetimecash.com/affiliate/stats.php?username={$affSession->username}&password={$affSession->password}" );
+	header( "Location: " . $config['base_url'] . "/affiliate/stats.php?username={$affSession->username}&password={$affSession->password}" );
 	exit;
 }
 function save_webmaster()
