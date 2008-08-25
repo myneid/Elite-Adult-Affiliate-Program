@@ -1,0 +1,12 @@
+To install follow these steps
+
+1. cd templates; mkdir smarty_c smarty_cache; chmod 777 smarty_*
+2. in your mysql create a database for example named AffiliateProgram
+3. input affiliateprogram.sql into your new database you created
+3.a. in the new database in the table APConfig change base_url to the base url of your aff program
+4. in phpincludes/classAffiliateProgramDB.inc.php  enter in your database username, password, hostname and db name
+5. in admin/ modify .htaccess to have the absolute path to the .htpasswd file for your site
+6. in admin/ create your .htpasswd file with htpasswd program
+7. go to yourprogram.com/admin and click on config and enter in all the configuration values
+8. click in admin to manage scales and you need to set a scale up for the default and no console programs
+9. crontabs: after midnight every day you must run admin/runreferralamounts.php if you want webmaster referrals to go through and cron/subid_summary.php if you want to offer subid stats
