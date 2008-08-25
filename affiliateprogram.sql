@@ -107,8 +107,8 @@ create table Hit (
   affiliate_id int,
   hit_type varchar(32),
   ipaddress varchar(15),
-  browser varchar(128),
-  referring_url varchar(255),
+  browser_id int,
+  ReferringUrl_id int,
   site_id int,
   uniq bool,
   program_id int default '1',
@@ -285,3 +285,19 @@ CREATE TABLE `wire_info` (
   PRIMARY KEY  (`id`),
   KEY `webmaster_id` (`webmaster_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `Browsers` (
+  `id` int(11) NOT NULL auto_increment,
+  `browser` varchar(255) default NULL,
+  `name` varchar(255) default NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `browser` (`browser`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=166757 ;
+
+CREATE TABLE IF NOT EXISTS `ReferringUrls` (
+  `id` int(11) NOT NULL auto_increment,
+  `referring_url` varchar(255) default NULL,
+  `isSe` tinyint(1) default '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `referring_url` (`referring_url`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=563897 ;

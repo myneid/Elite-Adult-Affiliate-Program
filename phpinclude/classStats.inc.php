@@ -656,10 +656,30 @@ return false;
 			$res = $this->db->query("insert into Stats (affiliate_id, date, hits, uniques, second_hits,signups, cancels, chargebacks, renewals,income) values (?, now(), 0, $u, 1,0,0,0,0,0)", array($_REQUEST['aid']));	
 		}
 		
+		//get referring url id
+		$res = $this->db->query("select id from ReferringUrls where referring_url=?", array($_SERVER['HTTP_REFERER']));
+		list($refurl_id) = $res->fetchRow();
+		if(!$refurl_id)
+		{
+			$res = $this->db->query("insert into ReferringUrls (referring_url) values (?)", array($_SERVER['HTTP_REFERER']));
+			$res = $this->db->query("select id from ReferringUrls where referring_url=?", array($_SERVER['HTTP_REFERER']));
+			list($refurl_id) = $res->fetchRow();
+		}
+		
+		//get browser id
+		$res = $this->db->query("select id from Browsers where browser=?", array($_SERVER['HTTP_USER_AGENT']));
+		list($browser_id) = $res->fetchRow();
+		if(!$browser_id)
+		{
+			$res = $this->db->query("insert into Browsers (browser) values (?)", array($_SERVER['HTTP_USER_AGENT']));
+			$res = $this->db->query("select id from Browsers where browser=?", array($_SERVER['HTTP_USER_AGENT']));
+			list($browser_id) = $res->fetchRow();
+		}
+		
 		$hit =& new Hit($this->db);
 		$hit->setAffiliateId($_REQUEST['aid']);
-		$hit->setBrowser($_SERVER['HTTP_USER_AGENT']);
-		$hit->setReferringUrl(@$_SERVER['HTTP_REFERER']);
+		$hit->setBrowser_id($browser_id);
+		$hit->setReferringUrl_id($refurl_id);
 		$hit->setDatetime(date("Y-m-d H:i:s"));
 		$hit->setIpAddress($_SERVER['REMOTE_ADDR']);
 		$hit->setSiteId($_REQUEST['sid']);

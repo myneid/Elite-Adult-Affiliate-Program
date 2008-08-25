@@ -44,12 +44,12 @@ class Hit extends PEAR
 	* description of browser
 	*@var string
 	*/
-	var $browser;
+	var $browser_id;
 	/**
 	* referring url
 	*@var string
 	*/
-	var $referring_url;
+	var $referringurl_id;
 	/**
 	* unique, bool value
 	*@var bool
@@ -175,10 +175,10 @@ class Hit extends PEAR
 	*@param mixed
 	*@access public
 	*/
-	function setBrowser($browser)
+	function setBrowser_id($browser)
 	{
 		$this->_modified = true;
-		$this->browser = $browser;
+		$this->browser_id = $browser;
 	}
 	/**
 	* Acessor function to set the referring_url variable
@@ -186,12 +186,12 @@ class Hit extends PEAR
 	*@param mixed
 	*@access public
 	*/
-	function setReferringUrl($referring_url)
+	function setReferringUrl_id($referring_url)
 	{
 		if($referring_url != $this->referring_url)
 		{
 			$this->_modified = true;
-			$this->referring_url = $referring_url;
+			$this->referringurl_id = $referring_url;
 	
 		}
 	}
@@ -311,9 +311,9 @@ class Hit extends PEAR
 	*@access public
 	*@return mixed
 	*/
-	function getBrowser()
+	function getBrowser_id()
 	{
-		return $this->browser;
+		return $this->browser_id;
 	}
 	/**
 	* Acessor function to get the referring_url variable
@@ -321,9 +321,9 @@ class Hit extends PEAR
 	*@access public
 	*@return mixed
 	*/
-	function getReferringURL()
+	function getReferringURL_id()
 	{
-		return $this->referring_url;
+		return $this->referringurl_id;
 	}
 	/**
 	* Acessor function to get the unique variable
@@ -378,8 +378,8 @@ class Hit extends PEAR
 		if($this->_record_exists)
 		{
 			//update
-			$query = "update Hit set datetime=?,affiliate_id=?,hit_type=?,ipaddress=?,browser=?,referring_url=?,site_id=?,uniq=?,program_id=?,sub_id=? where id=?";
-			$valueArray = array($this->getDateTime(),$this->getAffiliateId(),$this->getHitType(),$this->getIpaddress(),$this->getBrowser(),$this->getReferringURL(),$this->getSiteId(),$this->getUnique(),$this->getProgramID(), $this->getSubid(), $this->getId());
+			$query = "update Hit set datetime=?,affiliate_id=?,hit_type=?,ipaddress=?,browser_id=?,referringurl_id=?,site_id=?,uniq=?,program_id=?,sub_id=? where id=?";
+			$valueArray = array($this->getDateTime(),$this->getAffiliateId(),$this->getHitType(),$this->getIpaddress(),$this->getBrowser_id(),$this->getReferringURL_id(),$this->getSiteId(),$this->getUnique(),$this->getProgramID(), $this->getSubid(), $this->getId());
 		}
 		else
 		{
@@ -387,8 +387,8 @@ class Hit extends PEAR
 			if($this->getId() == '')
 				$this->setId($this->_generateNextId());
 
-			$query = "insert into Hit (id,datetime,affiliate_id,hit_type,ipaddress,browser,referring_url,site_id,uniq,program_id, sub_id) values (?,?,?,?,?,?,?,?,?,?,?)";
-			$valueArray = array($this->getId(),$this->getDateTime(),$this->getAffiliateId(),$this->getHitType(),$this->getIpaddress(),$this->getBrowser(),$this->getReferringURL(),$this->getSiteId(),$this->getUnique(),$this->getProgramID(),$this->getSubId());
+			$query = "insert into Hit (id,datetime,affiliate_id,hit_type,ipaddress,browser_id,referringurl_id,site_id,uniq,program_id, sub_id) values (?,?,?,?,?,?,?,?,?,?,?)";
+			$valueArray = array($this->getId(),$this->getDateTime(),$this->getAffiliateId(),$this->getHitType(),$this->getIpaddress(),$this->getBrowser_id(),$this->getReferringURL_id(),$this->getSiteId(),$this->getUnique(),$this->getProgramID(),$this->getSubId());
 		}
 		$sth = $this->db->prepare($query);
 		$res = $this->db->execute($sth, $valueArray);
@@ -401,7 +401,7 @@ class Hit extends PEAR
 		$this->_record_exists = true;
 	}
 	/**
-	this function will get the record by its id
+	*this function will get the record by its id
 	*
 	*@access public
 	*/
@@ -423,8 +423,8 @@ class Hit extends PEAR
 		$this->setAffiliateId($row['affiliate_id']);
 		$this->setHitType($row['hit_type']);
 		$this->setIpaddress($row['ipaddress']);
-		$this->setBrowser($row['browser']);
-		$this->setReferringUrl($row['referring_url']);
+		$this->setBrowser_id($row['browser_id']);
+		$this->setReferringUrl_id($row['referringurl_id']);
 		$this->setSiteId($row['site_id']);
 		$this->setUnique($row['uniq']);
 		$this->setProgramId($row['program_id']);
