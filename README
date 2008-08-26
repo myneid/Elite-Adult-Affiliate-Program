@@ -3,7 +3,8 @@ To install follow these steps
 1. cd templates; mkdir smarty_c smarty_cache; chmod 777 smarty_*
 2. in your mysql create a database for example named AffiliateProgram
 3. input affiliateprogram.sql into your new database you created
-3.a. in the new database in the table APConfig change base_url to the base url of your aff program
+3.a. input the dialer_target.sql into the new database you created
+3.b. in the new database in the table APConfig change base_url to the base url of your aff program [this can be done via the web interface admin]
 4. in phpincludes/classAffiliateProgramDB.inc.php  enter in your database username, password, hostname and db name
 5. in admin/ modify .htaccess to have the absolute path to the .htpasswd file for your site
 6. in admin/ create your .htpasswd file with htpasswd program

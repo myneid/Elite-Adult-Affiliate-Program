@@ -122,7 +122,7 @@ function view_wire_info()
 	$wireinfo = new Wire_Info();
 	$wireinfo->getByWebmasterID( $_REQUEST['webmaster_id'] );
 
-	$res = $wireinfo->db->query("select name, alpha2 from dialer_target.countrycodes");
+	$res = $wireinfo->db->query("select name, alpha2 from countrycodes");
 	$countries = array();
 	while(list($name, $code) = $res->fetchRow())
 	{
@@ -212,7 +212,7 @@ function view_webmaster_info()
 		}
 	}
 
-	$res = $webmaster->db->query("select name, alpha2 from dialer_target.countrycodes");
+	$res = $webmaster->db->query("select name, alpha2 from countrycodes");
 	$countries = array();
 	while(list($name, $code) = $res->fetchRow())
 	{
