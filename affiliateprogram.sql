@@ -112,6 +112,7 @@ create table Hit (
   site_id int,
   uniq bool,
   program_id int default '1',
+  sub_id VARCHAR(64),
   key affiliate_id (affiliate_id),
   key datetime (datetime),
   index idx_affiliate_id_datetime (affiliate_id, datetime)
@@ -301,3 +302,17 @@ CREATE TABLE IF NOT EXISTS `ReferringUrls` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `referring_url` (`referring_url`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=563897 ;
+
+CREATE TABLE `subid_stats` (
+  `id` int(11) NOT NULL auto_increment,
+  `affiliate_id` int(11) default NULL,
+  `date` date default NULL,
+  `sub_id` varchar(128) default NULL,
+  `hits` int(11) default NULL,
+  `uniques` int(11) default NULL,
+  `second_hits` int(11) default NULL,
+  `signups` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `affiliate_id` (`affiliate_id`),
+  KEY `idx_affilaite_id_date` (`affiliate_id`,`date`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='stats per day per affiliate per subid'
