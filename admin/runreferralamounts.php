@@ -6,11 +6,11 @@
 //it will get that referrer webmasters info
 //and apply the percentage and add the affilaite incom * percentage to the referral income for the referrer webmaster
 
-require_once('/web/pinkpays.com/phpinclude/classAffiliate.inc.php');
-require_once('/web/pinkpays.com/phpinclude/classWebmaster.inc.php');
-require_once('/web/pinkpays.com/phpinclude/classStats.inc.php');
-require_once('/web/pinkpays.com/phpinclude/classAffiliate.inc.php');
-require_once('/web/pinkpays.com/phpinclude/classAPConfig.inc.php');
+require_once('../phpinclude/classAffiliate.inc.php');
+require_once('../phpinclude/classWebmaster.inc.php');
+require_once('../phpinclude/classStats.inc.php');
+require_once('../phpinclude/classAffiliate.inc.php');
+require_once('../phpinclude/classAPConfig.inc.php');
 
 $db = new AffiliateProgramDB();
 $db->connect_to_db();

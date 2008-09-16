@@ -9,8 +9,7 @@ require_once('../phpinclude/classSite.inc.php');
 require_once('../phpinclude/classSmartyEC.inc.php');
 require_once('../phpinclude/classAPConfig.inc.php');
 
-define( 'BANNER_BASE', '/web/pinkpays.com/banners' );
-define( 'BANNER_URL', 'http://new.pinkpays.com/banners' );
+
 
 $banner_sizes = array(
 	'468x60'	=> '460x60',
@@ -29,6 +28,10 @@ $db->connect_to_db();
 
 $apconfig = new APConfig($db);
 $config_vars = $apconfig->get_all_vars();
+
+define( 'BANNER_BASE', 'banners/' );
+define( 'BANNER_URL', $conf_vars['base_url'] . '/banners' );
+
 
 $auth = new AffiliateLogin($db);
 
