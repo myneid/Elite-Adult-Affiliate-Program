@@ -1,0 +1,44 @@
+<table border=1 cellpadding="0" cellspacing="0" bordercolor="#000000"  bgcolor=#666666>
+	<tr bgcolor="#333333"><th><font color="#FFFFCC">Percentage</font></th>
+	<th><font color="#FFFFCC">Signups</font></th>
+	<th><font color="#FFFFCC">Price Per Hit</font></th>
+	<th><font color="#FFFFCC">Price Per Signup</font></th>
+	<th><font color="#FFFFCC">Price Reduced Per Cancel</font></th>
+	<th><font color="#FFFFCC">Price Reduced Per Chargeback</font></th>
+	<th>Action</th>
+	</tr>
+	
+	{foreach item=s from=$scales}
+		<input type=hidden name=id_{$s->id} value={$s->id}>
+		<tr id="static_scale_{$s->id}" style="visibility: visible;">
+		<td bgcolor=#999999>{$s->getPercentage()}</td>
+		<td bgcolor=#999999>{$s->getSignups()}</td>
+		<td bgcolor=#999999>{$s->getPricePerHit()}</td>
+		<td bgcolor=#999999>{$s->getPricepersignup()}</td>
+		<td bgcolor=#999999>{$s->getPricereducedpercancel()}</td>	
+		<td bgcolor=#999999>{$s->getPricereducedperchargeback()}</td>	
+		<td><a href="javascript:edit_scale('{$s->id}')">Edit</a></td>
+		</tr>
+		<tr id="scale_{$s->id}" style="visibility: hidden; display: none">
+		<td bgcolor=#999999><input type=text name=percentage_{$s->id} value='{$s->getPercentage()}'></td>
+		<td bgcolor=#999999><input type=text name=signups_{$s->id} value='{$s->getSignups()}'></td>
+		<td bgcolor=#999999><input type=text name=priceperhit_{$s->id} value='{$s->getPricePerHit()}'></td>
+		<td bgcolor=#999999><input type=text name=pricepersignup_{$s->id} value='{$s->getPricepersignup()}'></td>
+		<td bgcolor=#999999><input type=text name=pricereducedpercancel_{$s->id} value='{$s->getPricereducedpercancel()}'></td>	
+		<td bgcolor=#999999><input type=text name=pricereducedperchargeback_{$s->id} value='{$s->getPricereducedperchargeback()}'></td>	
+		<td><a href="javascript:save_scales('{$s->id}', document.forms['savescales'])">Save</a> | <a href="javascript:cancel_save_scales('{$s->id}')">Cancel</a> | <a href="javascript:delete_scale('{$s->id}', '{$affiliate_id}', document.forms['savescales'].options[document.forms['savescales'].selectedIndex].value)">Delete</a></td>
+		</tr>
+	{/foreach}
+		<tr id="static_scale_new">
+		<td colspan="7"><a href="javascript:edit_scale('new')">Add New Scale</a></td>
+		</tr>
+		<tr id="scale_new" style="visibility: hidden;">
+		<td bgcolor=#999999><input type=text name=percentage_new ></td>
+		<td bgcolor=#999999><input type=text name=signups_new ></td>
+		<td bgcolor=#999999><input type=text name=priceperhit_new ></td>
+		<td bgcolor=#999999><input type=text name=pricepersignup_new ></td>
+		<td bgcolor=#999999><input type=text name=pricereducedpercancel_new value='{$s->getPricereducedpercancel()}'></td>	
+		<td bgcolor=#999999><input type=text name=pricereducedperchargeback_new ></td>	
+		<td><a href="javascript:save_scales('new', document.forms['savescales'])">Save</a> | <a href="javascript:cancel_save_scales('new')">Cancel</a> </td>
+		</tr>
+    </table>
