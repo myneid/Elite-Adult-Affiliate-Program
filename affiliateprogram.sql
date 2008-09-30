@@ -33,6 +33,7 @@ create table Scale (
   program_id int,
   percentage float,
   signups int,
+  revsharepercent int,
   priceperhit float,
   pricepersignup float,
   pricereducedpercancel float,
