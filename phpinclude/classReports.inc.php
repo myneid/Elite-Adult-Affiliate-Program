@@ -497,7 +497,7 @@ class Reports extends PEAR
 	function generateStatsByReferringUrl()
 	{
 		$return = array();
-		$res = $this->db->query("select referring_url, uniq from Hit where affiliate_id=? and datetime >= ? and datetime<=?", array($this->getAffiliateId(), $this->getBeginDate(), $this->getEndDate()));
+		$res = $this->db->query("select referring_url, uniq from Hit,ReferringUrls where Hit.ReferringUrl_id = ReferringUrls.id and affiliate_id=? and datetime >= ? and datetime<=?", array($this->getAffiliateId(), $this->getBeginDate(), $this->getEndDate()));
 		if(DB::isError($res))
 			print_r($res);
 		while(list($refurl, $uniq) = $res->fetchRow())
@@ -512,7 +512,7 @@ class Reports extends PEAR
 			$return[$refurl]['ratio'] = "0:" . $return[$refurl]['uniques'];
 		}
 
-		$res = $this->db->query("select Hit.referring_url, Sale.id, Sale.affiliate_payout from Sale, Hit where Hit.id=Sale.hits_id and Sale.type='newsale' and Sale.affiliate_id=? and Sale.datetime >= ? and Sale.datetime<=?", array($this->getAffiliateId(), $this->getBeginDate(), $this->getEndDate()));	
+		$res = $this->db->query("select ReferringUrls.referring_url, Sale.id, Sale.affiliate_payout from Sale, Hit,ReferringUrls where Hit.id=Sale.hits_id and Hit.ReferringUrl_id=ReferringUrls.id and Sale.type='newsale' and Sale.affiliate_id=? and Sale.datetime >= ? and Sale.datetime<=?", array($this->getAffiliateId(), $this->getBeginDate(), $this->getEndDate()));	
 		if(DB::isError($res))
 			print_r($res);
 		while(list($refurl, $id, $income) = $res->fetchRow())
