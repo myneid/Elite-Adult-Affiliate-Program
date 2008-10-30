@@ -497,7 +497,7 @@ class Reports extends PEAR
 	function generateStatsByReferringUrl()
 	{
 		$return = array();
-		$res = $this->db->query("select referring_url, uniq from Hit,ReferringUrls where Hit.ReferringUrl_id = ReferringUrls.id and affiliate_id=? and datetime >= ? and datetime<=?", array($this->getAffiliateId(), $this->getBeginDate(), $this->getEndDate()));
+		$res = $this->db->query("select referring_url, uniq from Hit,ReferringUrls where Hit.ReferringUrl_id = ReferringUrls.id and affiliate_id=? and hit_type='first' and datetime >= ? and datetime<=?", array($this->getAffiliateId(), $this->getBeginDate(), $this->getEndDate()));
 		if(DB::isError($res))
 			print_r($res);
 		while(list($refurl, $uniq) = $res->fetchRow())
