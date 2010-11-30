@@ -1,3 +1,7 @@
+
+A very simple adult affiliate rogram written in PHP
+
+
 To install follow these steps
 
 1. cd templates; mkdir smarty_c smarty_cache; chmod 777 smarty_*
